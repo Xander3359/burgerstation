@@ -15,7 +15,9 @@
 // END_PREFERENCES
 
 // BEGIN_INCLUDE
+#include "code\__byond_version_compat.dm"
 #include "code\__version_check.dm"
+#include "code\__defines\__globals.dm"
 #include "code\__defines\_config.dm"
 #include "code\__defines\_defines.dm"
 #include "code\__defines\_paths.dm"
@@ -2403,6 +2405,7 @@
 #include "code\_core\world\subsystems\turfs.dm"
 #include "code\_core\world\subsystems\vote.dm"
 #include "code\_core\world\subsystems\wikibot.dm"
+#include "code\_globalvars\lists\mobs.dm"
 #include "code\addons\lighting\__lighting_docs.dm"
 #include "code\addons\lighting\_lighting_defs.dm"
 #include "code\addons\lighting\lighting_area.dm"
@@ -2412,6 +2415,10 @@
 #include "code\addons\lighting\lighting_source.dm"
 #include "code\addons\lighting\lighting_turf.dm"
 #include "code\addons\lighting\~lighting_undef.dm"
+#include "code\controllers\controller.dm"
+#include "code\controllers\globals.dm"
+#include "code\datums\emotes.dm"
+#include "code\modules\admin\admin.dm"
 #include "interface\interface.dm"
 #include "interface\interface.dmf"
 #include "scripts\macro.dms"
