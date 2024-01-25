@@ -46,8 +46,6 @@
 	var/list/mob_type_blacklist_typecache
 	/// Types that can use this emote regardless of their state.
 	var/list/mob_type_ignore_stat_typecache
-	/// In which state can you use this emote? (Check stat.dm for a full list of them)
-	var/stat_allowed = CONSCIOUS
 	/// Sound to play when emote is called.
 	var/sound
 	/// Used for the honk borg emote.
@@ -55,11 +53,11 @@
 	/// Can only code call this event instead of the player.
 	var/only_forced_audio = FALSE
 	/// The cooldown between the uses of the emote.
-	var/cooldown = 0.8 SECONDS
+	var/cooldown = 80
 	/// Does this message have a message that can be modified by the user?
 	var/can_message_change = FALSE
 	/// How long is the cooldown on the audio of the emote, if it has one?
-	var/audio_cooldown = 2 SECONDS
+	var/audio_cooldown = 20
 
 /datum/emote/New()
 	switch(mob_type_allowed_typecache)
@@ -237,28 +235,19 @@
  *
  * Returns a bool about whether or not the user can run the emote.
  */
-/datum/emote/proc/can_run_emote(mob/user, status_check = TRUE, intentional = FALSE)
+/datum/emote/proc/can_run_emote(mob/living/user, status_check = TRUE, intentional = FALSE)
 	if(!is_type_in_typecache(user, mob_type_allowed_typecache))
 		return FALSE
 	if(is_type_in_typecache(user, mob_type_blacklist_typecache))
 		return FALSE
-	if(status_check && !is_type_in_typecache(user, mob_type_ignore_stat_typecache))
-		if(user.stat > stat_allowed)
-			if(!intentional)
-				return FALSE
-			switch(user.stat)
-				if(SOFT_CRIT)
-					to_chat(user, span_warning("You cannot [key] while in a critical condition!"))
-				if(UNCONSCIOUS, HARD_CRIT)
-					to_chat(user, span_warning("You cannot [key] while unconscious!"))
-				if(DEAD)
-					to_chat(user, span_warning("You cannot [key] while dead!"))
-			return FALSE
-		if(hands_use_check && HAS_TRAIT(user, TRAIT_HANDS_BLOCKED))
-			if(!intentional)
-				return FALSE
-			to_chat(user, span_warning("You cannot use your hands to [key] right now!"))
-			return FALSE
+	if(!intentional)
+		return FALSE
+	if(user.dead)
+		to_chat(user, span_warning("You cannot [key] while dead!"))
+		return FALSE
+	if(hands_use_check && HAS_TRAIT(user, TRAIT_HANDS_BLOCKED))
+		to_chat(user, span_warning("You cannot use your hands to [key] right now!"))
+		return FALSE
 
 	if(HAS_TRAIT(user, TRAIT_EMOTEMUTE))
 		return FALSE
