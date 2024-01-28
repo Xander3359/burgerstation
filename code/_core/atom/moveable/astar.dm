@@ -8,7 +8,7 @@
 	var/list/turf/destination_turfs = astar_get_circle(destination,needed_distance)
 
 	for(var/k in destination_turfs)
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 		var/turf/T = k
 		if(mover)
 			if(!T.Enter(mover))

@@ -244,22 +244,22 @@
 	for(var/k in hearers(range_to_use,owner))
 		var/mob/living/L = k
 		if(L == owner)
-			CHECK_TICK(75,FPS_SERVER)
+			CHECK_TICK
 			continue
 		if(!is_living(L))
-			CHECK_TICK(75,FPS_SERVER)
+			CHECK_TICK
 			continue
 		if(!should_attack_mob(L))
-			CHECK_TICK(75,FPS_SERVER)
+			CHECK_TICK
 			continue
 		var/detection_level = get_detection_level(L,view_check=FALSE)
 		if(detection_level <= 0)
-			CHECK_TICK(75,FPS_SERVER)
+			CHECK_TICK
 			continue
 		if(!.)
 			. = list()
 		.[L] = detection_level
-		CHECK_TICK(75,FPS_SERVER)
+		CHECK_TICK
 
 /ai/proc/try_investigate(var/atom/desired_target,var/cooldown=reaction_time,var/force_if_on_cooldown=FALSE)
 

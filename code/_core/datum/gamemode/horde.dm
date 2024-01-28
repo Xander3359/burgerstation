@@ -228,7 +228,7 @@
 
 	var/turf/T = get_turf(spawn_node)
 	for(var/k in SSai.path_stuck_ai) //Unclog stuck AI.
-		CHECK_TICK(50,FPS_SERVER*5)
+		CHECK_TICK
 		var/ai/AI = k
 		var/mob/living/L = AI.owner
 		if(L.dead)
@@ -249,7 +249,7 @@
 
 	while(wave_to_spawn > 0)
 		wave_to_spawn--
-		CHECK_TICK(50,FPS_SERVER*5)
+		CHECK_TICK
 		var/mob/living/L = create_horde_mob(T)
 		L.ai.set_path(found_path)
 		tracked_enemies += L
@@ -337,7 +337,7 @@
 
 	while(picks_remaining > 0)
 		picks_remaining--
-		CHECK_TICK(50,FPS_SERVER*10)
+		CHECK_TICK
 		var/turf/chosen_target
 		if(length(priority_targets))
 			chosen_target = get_turf(pick(priority_targets))
@@ -368,11 +368,11 @@
 
 	while(picks_remaining > 0)
 		picks_remaining--
-		CHECK_TICK(50,FPS_SERVER*20)
+		CHECK_TICK
 		var/turf/chosen_spawn = pick(all_syndicate_spawns)
 		var/found_player = FALSE
 		for(var/k in all_players)
-			CHECK_TICK(50,FPS_SERVER*20)
+			CHECK_TICK
 			var/mob/living/advanced/player/P = k
 			if(P && P.dead) continue //They're dead. Doesn't matter.
 			if(get_dist(P,chosen_spawn) > VIEW_RANGE + ZOOM_RANGE) continue //They're close, doesn't matter.

@@ -50,10 +50,10 @@
 /proc/cmp_ckey_dsc(client/a, client/b)
 	return sorttext(a.ckey, b.ckey)
 //This is an example comment
-/proc/cmp_subsystem_display(subsystem/a, subsystem/b)
+/proc/cmp_subsystem_display(datum/controller/subsystem/a, datum/controller/subsystem/b)
 	return sorttext(b.name, a.name)
 
-/proc/cmp_subsystem_priority(subsystem/a, subsystem/b)
+/proc/cmp_subsystem_priority(datum/controller/subsystem/a, datum/controller/subsystem/b)
 	return cmp_numeric_asc(a.priority,b.priority)
 
 /proc/cmp_generation_priority(var/obj/marker/generation/a,var/obj/marker/generation/b)

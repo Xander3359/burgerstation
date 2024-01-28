@@ -1,7 +1,7 @@
 /world/proc/subsystem_life_loop(var/subsystem/SS)
 	set background = TRUE
-	spawn while(SS.tick_rate > 0 && world_state < STATE_SHUTDOWN)
-		if(SS.tick_rate > 0 && SS.overtime_count < SS.overtime_max)
+	spawn while(SS.wait > 0 && world_state < STATE_SHUTDOWN)
+		if(SS.wait > 0 && SS.overtime_count < SS.overtime_max)
 			if(world_state >= STATE_RUNNING && SS.tick_usage_max > 0 && world.tick_usage > SS.tick_usage_max)
 				SS.overtime_count++
 				sleep(1 TICKS)
@@ -17,13 +17,13 @@
 				SS.unclog()
 			sleep(10)
 			continue
-		else if(result == FALSE || SS.tick_rate <= 0)
-			SS.tick_rate = 0
+		else if(result == FALSE || SS.wait <= 0)
+			SS.wait = 0
 			log_subsystem(SS.name,"Shutting down.")
 			break
 		SS.run_failures = 0
 
-		sleep(TICKS2DS(SS.tick_rate))
+		sleep(TICKS2DS(SS.wait))
 
 		while(world_state <= STATE_INITIALIZING)
 			sleep(10)
@@ -44,7 +44,7 @@
 			log_subsystem(SS.name,"Initialization took <b style='color:red'>[benchmark_time]</b> seconds.")
 		if(60 to INFINITY)
 			log_subsystem(SS.name,"<b style='color:red'>Initialization took [benchmark_time] seconds.</b>")
-	CHECK_TICK_HARD
+	CHECK_TICK
 
 /world/proc/life()
 
@@ -69,7 +69,7 @@
 
 	log_subsystem("Subsystem Controller","Created and sorted [length(active_subsystems)] subsystems sorted.")
 
-	CHECK_TICK_HARD
+	CHECK_TICK
 
 	for(var/k in active_subsystems)
 		var/subsystem/SS = k
@@ -89,7 +89,7 @@
 	log_subsystem("Subsystem Controller",final_time_text)
 	log_debug(final_time_text)
 
-	CHECK_TICK_HARD
+	CHECK_TICK
 
 	world_state = STATE_RUNNING
 
@@ -106,7 +106,7 @@
 		O.force_move(move_turf)
 		play_music_track(possible_music[lobby_track], O.client)
 		O.show_hud(TRUE,speed = 2 SECONDS)
-		CHECK_TICK_HARD
+		CHECK_TICK
 
 	log_subsystem("Subsystem Controller","Life initializations complete.")
 

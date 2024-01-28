@@ -1,0 +1,123 @@
+#define ROUND_ID_DIR "data/server/round_id.txt"
+
+#define LOG_RATE 10
+
+SUBSYSTEM_DEF(logging)
+	name = "Logging Subsystem"
+	desc = "Logs things that are important."
+	wait = DS2TICKS(LOG_RATE)
+	priority = SS_ORDER_CONFIG
+	var/round_id = 0
+	var/start_date = ""
+
+	var/list/buffered_log_chat = list()
+	var/list/buffered_log_admin = list()
+	var/list/buffered_log_error = list()
+	var/list/buffered_log_debug = list()
+	var/list/buffered_log_subsystem = list()
+
+	var/commit = "NOT FOUND"
+	var/origin_commit = "NOT FOUND"
+	var/version = "NOT FOUND"
+
+//Logging shouldn't be unclogged.
+/datum/controller/subsystem/logging/unclog(mob/caller)
+	. = ..()
+
+/datum/controller/subsystem/logging/Initialize()
+	if(fexists(ROUND_ID_DIR))
+		var/file_text = rustg_file_read(ROUND_ID_DIR)
+		round_id = text2num(file_text)
+	round_id++
+	rustg_file_write("[round_id]",ROUND_ID_DIR)
+	start_date = lowertext(time2text(world.realtime,"YYYY-MMM-DD"))
+
+	var/datum/tgs_revision_information/tgs_revision = world.TgsRevision()
+	if(tgs_revision)
+		if(tgs_revision.commit)
+			commit = copytext(tgs_revision.commit,1,4)
+		if(tgs_revision.origin_commit)
+			origin_commit = copytext(tgs_revision.origin_commit,1.4)
+	version = "[DM_VERSION].[DM_BUILD]"
+
+	return ..()
+
+/datum/controller/subsystem/logging/proc/get_logging_dir(type)
+	return "data/server/logging/[round_id]-[start_date]/[type].txt"
+
+
+/datum/controller/subsystem/logging/proc/raw_log(file_name, text_data, timestamps = FALSE)
+	if(!file_name || !text_data)
+		return FALSE
+	rustg_log_write(get_logging_dir(file_name),text_data, timestamps ? "true" : null)
+	return TRUE
+
+/datum/controller/subsystem/logging/proc/log_from_list(identifier, list/desired_list)
+	if(!length(desired_list))
+		return FALSE
+	var/log_string = english_list(desired_list,"LIST ERROR","\n","\n")
+	rustg_log_write(get_logging_dir(identifier),log_string,"true")
+
+	var/list/identifier_to_rank = list(
+		"admin" = FLAG_PERMISSION_ADMIN,
+		"error" = FLAG_PERMISSION_DEVELOPER,
+		"debug" = FLAG_PERMISSION_DEVELOPER	,
+		"subsystem" = FLAG_PERMISSION_DEVELOPER
+	)
+
+	if(world.port != 0 && identifier_to_rank[identifier])
+		for(var/k in SSclient.all_clients)
+			var/client/C = SSclient.all_clients[k]
+			if(!C)
+				continue
+			if(!(C.permissions & identifier_to_rank[identifier]))
+				continue
+			if(C.settings)
+				if(identifier == "admin")
+					if(!C.settings.loaded_data["show_admin_messages"])
+						continue
+				else
+					if(!C.settings.loaded_data["show_debug_messages"])
+						continue
+			C.queued_chat_messages.Add(
+				list(
+					list(
+						"text" = span(identifier,log_string),
+						"output_target_list" = (identifier_to_rank[identifier] & FLAG_PERMISSION_DEVELOPER) ? list("chat_debug.output") : list("chat_all.output")
+					)
+				)
+			)
+
+	desired_list.Cut()
+
+	return TRUE
+
+/datum/controller/subsystem/logging/on_life()
+
+	if(log_from_list("chat",buffered_log_chat) == null)
+		buffered_log_chat.Cut()
+		buffered_log_chat += "Warning! buffered_log_chat could not be processed. Some data is missing."
+		log_debug("Warning! buffered_log_chat could not be processed. Some data is missing.")
+
+	if(log_from_list("admin",buffered_log_admin) == null)
+		buffered_log_admin.Cut()
+		buffered_log_admin += "Warning! buffered_log_admin could not be processed. Some data is missing."
+		log_debug("Warning! buffered_log_admin could not be processed. Some data is missing.")
+
+	if(log_from_list("error",buffered_log_error) == null)
+		buffered_log_error.Cut()
+		buffered_log_error += "Warning! buffered_log_error could not be processed. Some data is missing."
+		log_debug("Warning! buffered_log_error could not be processed. Some data is missing.")
+
+	if(log_from_list("debug",buffered_log_debug) == null)
+		buffered_log_debug.Cut()
+		buffered_log_debug += "Warning! buffered_log_debug could not be processed. Some data is missing."
+		log_debug("Warning! buffered_log_debug could not be processed. Some data is missing.")
+
+	if(log_from_list("subsystem",buffered_log_subsystem) == null)
+		buffered_log_subsystem.Cut()
+		buffered_log_subsystem += "Warning! buffered_log_subsystem could not be processed. Some data is missing."
+		log_debug("Warning! buffered_log_subsystem could not be processed. Some data is missing.")
+
+
+	return TRUE

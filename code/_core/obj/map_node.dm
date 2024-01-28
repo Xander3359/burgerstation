@@ -138,7 +138,7 @@
 	var/limit = 10
 	while(get_dist(node_checker,point_B) > desired_distance && limit > 0)
 		limit--
-		CHECK_TICK(75,FPS_SERVER)
+		CHECK_TICK
 		var/desired_dir = get_dir(node_checker,point_B)
 		var/turf/T = get_step(node_checker,desired_dir)
 		if(is_intercardinal_dir(desired_dir))

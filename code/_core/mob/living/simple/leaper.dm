@@ -92,7 +92,7 @@
 	var/turf/center_turf = ai && ai.objective_attack ? get_turf(ai.objective_attack) : get_turf(src)
 	var/turf/simulated/floor/T
 	FOR_DVIEW(T,2 + VIEW_RANGE*0.25,center_turf,0)
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 		if(get_dist(T,src) <= 2)
 			continue
 		if(!T.can_move_to() || !T.is_safe())
@@ -315,7 +315,7 @@
 			L.ai.allow_far_roaming = FALSE
 		tracked_frogs += L
 		. = TRUE
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 
 	if(.)
 		play_sound('sound/weapons/magic/creation.ogg',get_turf(src))

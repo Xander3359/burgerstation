@@ -144,7 +144,7 @@
 
 	var/turf/T
 	for (var/i in 1 to 4)
-		CHECK_TICK(50,FPS_SERVER*10)
+		CHECK_TICK
 		// this is ugly as fuck, but it's still more legible than doing this with a macro
 		switch (i)
 			if (1) T = t1

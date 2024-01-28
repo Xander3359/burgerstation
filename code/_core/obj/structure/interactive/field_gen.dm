@@ -110,7 +110,7 @@
 			var/obj/field_generator_wall/W = k
 			if(!W || !W.qdeleting)
 				qdel(W)
-			CHECK_TICK(50,FPS_SERVER)
+			CHECK_TICK
 		src.linked_field_gen_walls["[d]"].Cut()
 
 

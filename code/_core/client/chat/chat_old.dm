@@ -25,7 +25,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 			var/list/sent_frequencies = list()
 			for(var/k in all_radios)
 				var/obj/item/device/radio/R = k
-				CHECK_TICK(75,FPS_SERVER)
+				CHECK_TICK
 				var/desired_frequency = frequency
 				if(desired_frequency == -1 || !desired_frequency)
 					desired_frequency = R.frequency
@@ -43,7 +43,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 		if(TEXT_RAW) //People talking out of radios, pretty much. Note that this is formatted. (should probably remove this)
 			for(var/k in all_mobs_with_clients)
 				var/mob/M = k
-				CHECK_TICK(75,FPS_SERVER)
+				CHECK_TICK
 				if(within_range(M,source,TALK_RANGE))
 					M.to_chat(text_to_say,CHAT_TYPE_RADIO)
 
@@ -55,14 +55,14 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 			else
 				for(var/k in all_listeners)
 					var/atom/A = k
-					CHECK_TICK(75,FPS_SERVER)
+					CHECK_TICK
 					if(!within_range(A,source,WHISPER_RANGE))
 						continue
 					A.on_listen(speaker,source,text_to_say,text_type,frequency,language)
 				var/list/sent_frequencies = list()
 				for(var/k in all_radios)
 					var/obj/item/device/radio/R = k
-					CHECK_TICK(75,FPS_SERVER)
+					CHECK_TICK
 					if(!within_range(R,source,WHISPER_RANGE))
 						continue
 					R.on_listen(speaker,source,text_to_say,text_type,frequency,language)
@@ -78,7 +78,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 				var/formatted_speech_language = format_speech(speaker,source,text_to_say_language,text_type,frequency,language)
 				for(var/k in all_listeners)
 					var/atom/A = k
-					CHECK_TICK(75,FPS_SERVER)
+					CHECK_TICK
 					if(!within_range(A,source,TALK_RANGE))
 						continue
 					A.on_listen(speaker,source,text_to_say,text_type,frequency,language)
@@ -91,7 +91,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 				var/list/sent_frequencies = list()
 				for(var/k in all_radios)
 					var/obj/item/device/radio/R = k
-					CHECK_TICK(75,FPS_SERVER)
+					CHECK_TICK
 					if(!R.broadcasting || get_dist(source_turf,R) > RADIO_TALK_RANGE)
 						continue
 					var/desired_frequency = frequency
@@ -116,7 +116,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 				var/formatted_speech_language = format_speech(speaker,source,text_to_say_language,text_type,frequency,language)
 				for(var/k in all_listeners)
 					var/atom/A = k
-					CHECK_TICK(75,FPS_SERVER)
+					CHECK_TICK
 					if(!within_range(A,source,YELL_RANGE))
 						continue
 					A.on_listen(speaker,source,text_to_say,text_type,frequency,language)
@@ -129,7 +129,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 				var/list/sent_frequencies = list()
 				for(var/k in all_radios)
 					var/obj/item/device/radio/R = k
-					CHECK_TICK(75,FPS_SERVER)
+					CHECK_TICK
 					if(!R.broadcasting || get_dist(source_turf,R) > RADIO_YELL_RANGE)
 						continue
 					var/desired_frequency = frequency
@@ -148,7 +148,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 			var/formatted_speech = format_speech(speaker,source,text_to_say,text_type)
 			for(var/k in all_mobs_with_clients)
 				var/mob/M  = k
-				CHECK_TICK(75,FPS_SERVER)
+				CHECK_TICK
 				if(within_range(M,source,YELL_RANGE))
 					M.to_chat(formatted_speech,CHAT_TYPE_LOOC)
 			if(speaker.is_player_controlled()) log_chat("LOOC: [speaker.get_log_name()]: [text_to_say]")
@@ -156,7 +156,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 		if(TEXT_OOC)
 			var/formatted_speech = format_speech(speaker,source,text_to_say,text_type)
 			for(var/k in all_clients)
-				CHECK_TICK(75,FPS_SERVER)
+				CHECK_TICK
 				var/client/C = all_clients[k]
 				if(!C || !C.mob)
 					continue
@@ -169,7 +169,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 		if(TEXT_GHOST)
 			var/formatted_speech = format_speech(speaker,source,text_to_say,text_type)
 			for(var/k in all_clients)
-				CHECK_TICK(75,FPS_SERVER)
+				CHECK_TICK
 				var/client/C = all_clients[k]
 				if(!C.mob)
 					continue
@@ -204,7 +204,7 @@ proc/talk(var/atom/speaker, var/atom/source, var/text_to_say, var/text_type, var
 	for(var/k in all_mobs_with_clients)
 		var/mob/M = k
 
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 
 		if(!M.client) //Just in case.
 			continue

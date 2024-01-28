@@ -222,7 +222,7 @@
 	for(var/k in inventories)
 		var/obj/hud/inventory/I = k
 		for(var/i in I.contents)
-			CHECK_TICK(50,FPS_SERVER)
+			CHECK_TICK
 			var/obj/item/I2 = i
 			if(!dump_single_content(caller,I2,target_turf))
 				break

@@ -57,7 +57,7 @@
 	var/total_direction_mod = 0
 
 	for(var/d in DIRECTIONS_CARDINAL)
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 		var/turf/T = get_step(src,d)
 		if(!T) continue
 		if(blacklist[T]) continue
@@ -106,7 +106,7 @@
 		total_direction_mod += direction_mod
 
 	for(var/k in valid_turfs)
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 		if(!total_direction_mod)
 			break
 		var/new_power_value = valid_turfs[k]

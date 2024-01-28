@@ -89,7 +89,7 @@
 			failure = TRUE
 			break
 		found_turfs += T
-		CHECK_TICK(75,FPS_SERVER)
+		CHECK_TICK
 
 	if(failure)
 		log_error("Error: [src.get_debug_name()] was placed in an area ([A.get_debug_name()]) larger than 32x32!")
@@ -105,7 +105,7 @@
 			else if(T.has_dense_atom)
 				desired_color = "#D8D8D8"
 			I.DrawBox(desired_color,local_x + 16,local_y + 16)
-			CHECK_TICK(75,FPS_SERVER)
+			CHECK_TICK
 		src.stored_icon = I
 
 	set_doors(TRUE,TRUE,TRUE) //Open and bolt all the doors!

@@ -1,0 +1,35 @@
+SUBSYSTEM_DEF(advanced_thinking)
+	name = "Advanced Think Subsystem"
+	desc = "Any and all objects that think when it is active are handled here."
+	priority = SS_ORDER_PRELOAD
+	wait = SECONDS_TO_TICKS(1)
+	var/list/all_thinkers = list() //associative list
+
+/datum/controller/subsystem/advanced_thinking/unclog(mob/caller)
+	for(var/k in src.all_thinkers)
+		all_thinkers -= k
+	return ..()
+
+/datum/controller/subsystem/advanced_thinking/on_life()
+	for(var/k in all_thinkers)
+		CHECK_TICK
+		var/atom/A = k
+		if(!A || A.qdeleting)
+			all_thinkers -= A
+			continue
+		if(!A.think())
+			stop_advanced_thinking(A)
+
+	return TRUE
+
+/proc/start_advanced_thinking(atom/A)
+	SSadvanced_thinking.all_thinkers[A] = TRUE
+	return TRUE
+
+/proc/stop_advanced_thinking(atom/A)
+	if(SSadvanced_thinking.all_thinkers[A])
+		SSadvanced_thinking.all_thinkers -= A
+	return TRUE
+
+/proc/is_advanced_thinking(atom/A)
+	return SSadvanced_thinking.all_thinkers[A]

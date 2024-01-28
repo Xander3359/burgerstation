@@ -32,10 +32,10 @@
 	var/list/valid_turfs = list()
 
 	for(var/k in all_invasion_markers)
-		CHECK_TICK(25,FPS_SERVER*4)
+		CHECK_TICK
 		var/turf/T = get_turf(k)
 		for(var/turf/simulated/floor/F in range(VIEW_RANGE*0.5,T))
-			CHECK_TICK(25,FPS_SERVER*4)
+			CHECK_TICK
 			if(!F.is_safe_teleport())
 				continue
 			valid_turfs |= F
@@ -51,7 +51,7 @@
 	)
 
 	for(var/i=1,i<=30,i++)
-		CHECK_TICK(25,FPS_SERVER*4)
+		CHECK_TICK
 		if(!length(valid_turfs))
 			break
 		var/turf/T = pick(valid_turfs)

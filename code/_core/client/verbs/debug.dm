@@ -193,7 +193,7 @@ var/global/static/list/destroy_everything_whitelist = list(
 			else
 				error_tiles++
 
-			CHECK_TICK_HARD
+			CHECK_TICK
 
 	to_chat("Found [found_tiles] tiles, with [error_tiles] errored tiles.")
 	to_chat("Icon: [new/image(I)].")
@@ -326,7 +326,7 @@ var/global/static/list/destroy_everything_whitelist = list(
 	var/list/spawned_mobs = list()
 
 	for(var/i=1,i<=50,i++)
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 		var/mob/living/advanced/npc/nanotrasen/ST = new(pick(valid_turfs))
 		INITIALIZE(ST)
 		GENERATE(ST)

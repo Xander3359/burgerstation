@@ -55,12 +55,6 @@ var/global/list/all_error_ids = list()
 	world_log("<span class='debug'>[log_text]</span>")
 	SSlogging.buffered_log_debug += log_text
 
-/proc/log_admin(var/log_text)
-	if(SSconfig?.initialized && !CONFIG("ENABLE_LOGGING",TRUE))
-		return FALSE
-	world_log("<span class='admin'>[log_text]</span>")
-	SSlogging.buffered_log_admin += log_text
-
 /proc/log_chat(var/log_text)
 	if(SSconfig?.initialized && !CONFIG("ENABLE_LOGGING",TRUE))
 		return FALSE

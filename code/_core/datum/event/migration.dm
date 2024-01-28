@@ -60,7 +60,7 @@
 	notify_ghosts("A wave of hostile [initial(L.name)] is being created!",T)
 
 	for(var/i=1,i<=rand(4,8),i++)
-		CHECK_TICK(50,FPS_SERVER*5)
+		CHECK_TICK
 		var/mob/living/L2 = new L(T)
 		INITIALIZE(L2)
 		L2.ai.set_path(found_path)

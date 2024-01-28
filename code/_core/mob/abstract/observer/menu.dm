@@ -16,7 +16,7 @@
 	var/current_lobby_position = 1
 	var/next_lobby_cycle = 10 SECONDS
 
-	invisibility = INVISIBILITY_ALWAYS
+	invisibility = INVISIBILITY_ABSTRACT
 
 /mob/abstract/observer/menu/do_say(var/text_to_say, var/should_sanitize = TRUE, var/talk_type_to_use = TEXT_TALK,var/talk_range=TALK_RANGE,var/language_to_use=null)
 	return FALSE

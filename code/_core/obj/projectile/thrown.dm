@@ -108,7 +108,7 @@
 			A.Move(new_loc)
 		A.on_thrown(owner,hit_atom)
 		animate_hit(A)
-		CHECK_TICK(75,FPS_SERVER)
+		CHECK_TICK
 
 
 
@@ -120,7 +120,7 @@
 	if(length(src.contents))
 		log_error("Warning: [src.get_debug_name()] had contents while it was qdeleting!")
 		for(var/k in src.contents)
-			CHECK_TICK(75,FPS_SERVER)
+			CHECK_TICK
 			var/atom/movable/A = k
 			if(previous_loc)
 				A.force_move(previous_loc)

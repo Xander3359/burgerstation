@@ -1,0 +1,31 @@
+SUBSYSTEM_DEF(healthupdate)
+	name = "Health Update Subsystem"
+	desc = "Controls health updating of mobs."
+	priority = SS_ORDER_LAST
+
+	wait = 1
+
+
+	var/list/queued_mobs = list()
+
+/datum/controller/subsystem/healthupdate/unclog(mob/caller)
+	queued_mobs.Cut()
+	. = ..()
+
+
+/subsystem/healthupdate/on_life()
+
+	for(var/k in queued_mobs)
+		var/mob/living/L = k
+		queued_mobs -= k
+		if(!L || L.qdeleting)
+			continue
+		L.queue_health_update = FALSE
+		if(!L.health || L.health.qdeleting)
+			continue
+		L.health.update_health()
+		if(L.queue_health_update)
+			log_error("WARNING: [L.get_debug_name()] was added to the health update subsystem twice after being processed!")
+		CHECK_TICK
+
+	return TRUE

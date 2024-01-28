@@ -8,6 +8,9 @@
 #error Your version of BYOND is too out-of-date to compile this project. Go to https://secure.byond.com/download and update.
 #error You need version 515.1609 or higher
 #endif
+#if (DM_VERSION < MIN_COMPILER_VERSION || DM_BUILD < MIN_COMPILER_BUILD)
+#warn The compiler is too out of date to support Burgerstation. Please use BYOND version 515.1609 or higher for the code and compiler to function correctly.
+#endif
 
 // Keep savefile compatibilty at minimum supported level
 /savefile/byond_version = MIN_COMPILER_VERSION

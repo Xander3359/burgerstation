@@ -36,7 +36,7 @@
 	var/banks_saved = 0
 
 	for(var/k in SSclient.ckey_to_bank_data)
-		CHECK_TICK_HARD
+		CHECK_TICK
 		var/savedata/client/bank/D = SSclient.ckey_to_bank_data[k]
 		var/obj/item/bank_storage/BS = SSclient.ckey_to_bank_storage[k]
 		if(!BS)

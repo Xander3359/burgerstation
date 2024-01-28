@@ -65,7 +65,7 @@ var/global/list/all_generation_markers = list()
 		var/turf/T = valid_turfs[1]
 		valid_turfs -= T
 		desired_grow--
-		CHECK_TICK_HARD
+		CHECK_TICK
 		if(forbidden_turfs[T])
 			continue
 		forbidden_turfs[T] = TRUE //Already processed
@@ -80,7 +80,7 @@ var/global/list/all_generation_markers = list()
 			objects_placed += 1
 
 		for(var/v in DIRECTIONS_CARDINAL)
-			CHECK_TICK_HARD
+			CHECK_TICK
 			var/turf/T2 = get_step(T,v)
 			if(!T2)
 				continue

@@ -17,3 +17,6 @@
 /datum/controller/proc/Recover()
 
 /datum/controller/proc/stat_entry(msg)
+
+///TODO-TG Replace this shitty placeholder
+/datum/controller/proc/unclog(mob/caller)

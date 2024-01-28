@@ -21,7 +21,7 @@
 	for(var/k in all_players)
 		if(check_limit <= 0)
 			break
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 		var/mob/living/advanced/player/P = k
 		if(P.dead || !P.client || !SStax.check_delinquent(P))
 			continue

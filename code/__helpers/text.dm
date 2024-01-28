@@ -205,3 +205,15 @@
 	if(!max_length) max_length = CONFIG("MAX_MESSAGE_LENGTH",512)
 	var/name = input(user, message, title, default) as text|null
 	return html_encode(trim(name, max_length))
+
+/// Converts a semver string into a list of numbers
+/proc/semver_to_list(semver_string)
+	var/static/regex/semver_regex = regex(@"(\d+)\.(\d+)\.(\d+)", "")
+	if(!semver_regex.Find(semver_string))
+		return null
+
+	return list(
+		text2num(semver_regex.group[1]),
+		text2num(semver_regex.group[2]),
+		text2num(semver_regex.group[3]),
+	)

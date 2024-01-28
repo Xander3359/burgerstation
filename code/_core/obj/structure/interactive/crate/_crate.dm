@@ -114,7 +114,7 @@
 
 	if(collect_contents_on_initialize && !open)
 		for(var/k in loc.contents)
-			CHECK_TICK(50,FPS_SERVER)
+			CHECK_TICK
 			var/atom/movable/M = k
 			if(M == src || M.anchored)
 				continue
@@ -178,7 +178,7 @@
 	var/total_size = 0
 	for(var/k in loc.contents)
 		var/atom/movable/M = k
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 		if(M == src)
 			continue
 		if(M.loc != src.loc)
@@ -213,7 +213,7 @@
 		loot = null
 
 	for(var/k in contents)
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 		var/atom/movable/M = k
 		if(!M.force_move(src.loc))
 			log_error("Warning: [M.get_debug_name()] is stuck in a crate!")

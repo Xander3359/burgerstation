@@ -72,7 +72,7 @@
 		return FALSE
 
 	for(var/i=1,i<=spawn_amount,i++)
-		CHECK_TICK(50,FPS_SERVER)
+		CHECK_TICK
 		var/mob/living/L = pick(enemy_types_to_spawn)
 		var/turf/chosen_turf = pick(possible_turfs)
 		possible_turfs -= chosen_turf

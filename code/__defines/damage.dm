@@ -1,5 +1,3 @@
-#define ALL "all"
-
 #define BRUTE "brute"
 #define BURN "burn"
 #define TOX "toxin"

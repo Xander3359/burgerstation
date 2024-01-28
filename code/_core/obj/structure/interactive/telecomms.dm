@@ -62,7 +62,7 @@
 /obj/structure/interactive/telecomms/proc/process_data(var/list/data_to_process = list())
 
 	for(var/k in SSradio.all_radios)
-		CHECK_TICK(75,FPS_SERVER)
+		CHECK_TICK
 		var/obj/item/device/radio/R = k
 		if(!R || R.qdeleting)
 			SSradio.all_radios -= k

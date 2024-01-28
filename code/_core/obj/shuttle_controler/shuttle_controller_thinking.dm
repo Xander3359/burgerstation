@@ -51,6 +51,6 @@
 		var/area/A = get_area(src)
 		for(var/obj/structure/interactive/status_display/local_display/LD in A.contents)
 			LD.set_text(display)
-			CHECK_TICK(75,FPS_SERVER)
+			CHECK_TICK
 
 	return TRUE

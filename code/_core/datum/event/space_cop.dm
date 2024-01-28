@@ -36,7 +36,7 @@
 		valid_chairs += C
 
 	for(var/i=1,i<=rand(6,10),i++)
-		CHECK_TICK(50,FPS_SERVER*3)
+		CHECK_TICK
 		if(!length(valid_chairs))
 			break
 		var/obj/structure/interactive/chair/chosen_chair = pick(valid_chairs)

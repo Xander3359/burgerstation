@@ -72,15 +72,13 @@
 
 	return ..()
 
-/mob/living/simple/parrot/on_listen(var/atom/speaker,var/datum/source,var/text,var/raw_text,var/language_text,var/talk_type,var/frequency,var/language =LANGUAGE_BASIC,var/talk_range=TALK_RANGE)
-
+/mob/living/simple/parrot/on_listen(atom/speaker, datum/source, text, raw_text, language_text, talk_type, frequency, language = LANGUAGE_BASIC, talk_range = TALK_RANGE)
 	if(!CALLBACK_EXISTS("\ref[src]_parrot") && length(text) <= 30 && speaker != src && prob(5))
 		var/desired_text = text
 		if(prob(80))
 			desired_text = "SQUAWK! [uppertext(remove_trailing_punctuation(desired_text))]!"
 		if(length(desired_text))
-			CALLBACK_GLOBAL("\ref[src]_parrot",rand(30,100),.proc/talk,src,src,desired_text,TEXT_TALK,null,language,TALK_RANGE)
-
+			addtimer(CALLBACK(src, PROC_REF(talk), src, src, desired_text, TEXT_TALK, null, language, TALK_RANGE), rand(30,100))
 	return TRUE
 
 /mob/living/simple/parrot/mono

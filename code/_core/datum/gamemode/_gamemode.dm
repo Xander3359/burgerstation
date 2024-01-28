@@ -94,49 +94,13 @@
 		alert_level = desired_alert_level
 		switch(alert_level)
 			if(CODE_BLUE)
-				CALLBACK_GLOBAL(\
-					"gamemode_announce_code",\
-					10 SECONDS,\
-					.proc/announce,\
-					"Station Alert System",\
-					"Alert Level Increased",\
-					"Attention. Condition Blue set throughout the station. Exercise Term: Fade Out.",\
-					ANNOUNCEMENT_STATION,\
-					'sound/voice/announcement/code_blue.ogg'\
-				)
+				addtimer(CALLBACK(src, PROC_REF(announce), "Station Alert System", "Alert Level Increased", "Attention. Condition Blue set throughout the station. Exercise Term: Fade Out.", ANNOUNCEMENT_STATION, sount_to_play = 'sound/voice/announcement/code_blue.ogg'), 10 SECONDS)
 			if(CODE_AMBER)
-				CALLBACK_GLOBAL(
-					"gamemode_announce_code",\
-					10 SECONDS,\
-					.proc/announce,\
-					"Station Alert System",\
-					"Alert Level Increased",\
-					"Attention. Condition Amber set throughout the station. Exercise Term: Double Take. Additional Enemy Reinforcements detected in route to Area of Operations.",\
-					ANNOUNCEMENT_STATION,\
-					'sound/voice/announcement/code_amber.ogg'\
-				)
+				addtimer(CALLBACK(src, PROC_REF(announce), "Station Alert System", "Alert Level Increased", "Attention. Condition Amber set throughout the station. Exercise Term: Double Take. Additional Enemy Reinforcements detected in route to Area of Operations.", ANNOUNCEMENT_STATION, sount_to_play = 'sound/voice/announcement/code_amber.ogg'), 10 SECONDS)
 			if(CODE_RED)
-				CALLBACK_GLOBAL(\
-					"gamemode_announce_code",\
-					10 SECONDS,\
-					.proc/announce,\
-					"Station Alert System",\
-					"Alert Level Increased",\
-					"Warning. Warning. Condition Red set throughout the station. Exercise Term: Fast Pace. All personnel to prepare for potential borders on station..",\
-					ANNOUNCEMENT_STATION,\
-					'sound/voice/announcement/code_red.ogg'\
-				)
+				addtimer(CALLBACK(src, PROC_REF(announce), "Station Alert System", "Alert Level Increased", "Warning. Warning. Condition Red set throughout the station. Exercise Term: Fast Pace. All personnel to prepare for potential borders on station..", ANNOUNCEMENT_STATION, sount_to_play = 'sound/voice/announcement/code_red.ogg'), 10 SECONDS)
 			if(CODE_DELTA)
-				CALLBACK_GLOBAL(\
-					"gamemode_announce_code",\
-					10 SECONDS,\
-					.proc/announce,\
-					"Station Alert System",\
-					"Alert Level Increased",\
-					"Warning. Warning. Condition Delta set throughout the station. Exercise Term: Cocked Pistol. Nuclear Strike is imminent. All personnel are ordered to evacuate the Area of Operations.",\
-					ANNOUNCEMENT_STATION,\
-					'sound/voice/announcement/code_delta.ogg'\
-				)
+				addtimer(CALLBACK(src, PROC_REF(announce), "Station Alert System", "Alert Level Increased", "Warning. Warning. Condition Delta set throughout the station. Exercise Term: Cocked Pistol. Nuclear Strike is imminent. All personnel are ordered to evacuate the Area of Operations.", ANNOUNCEMENT_STATION, sount_to_play = 'sound/voice/announcement/code_delta.ogg'), 10 SECONDS)
 
 /gamemode/proc/on_life()
 

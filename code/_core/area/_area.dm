@@ -209,7 +209,7 @@
 
 /area/proc/smash_all_lights()
 	for(var/obj/structure/interactive/lighting/T in src.contents)
-		CHECK_TICK(75,FPS_SERVER)
+		CHECK_TICK
 		if(!T.desired_light_color)
 			continue
 		if(T.can_do_destruction())

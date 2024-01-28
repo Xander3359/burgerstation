@@ -51,17 +51,17 @@
 			data_list["inventory"] += list(I.save_item_data(P))
 			data_list["value"] += CEILING(I.get_value(),1)
 			total_items_saved++
-			CHECK_TICK_HARD
+			CHECK_TICK
 		if(length(data_list["inventory"]))
 			DB.loaded_data += list(data_list)
 			data_list["value"] = CEILING(data_list["value"]*0.25,1) + 1000
 			db_data_to_save |= DB
-		CHECK_TICK_HARD
+		CHECK_TICK
 
 	log_debug("Saving [length(db_data_to_save)] death box instances with [total_items_saved] items saved.")
 
 	for(var/k in db_data_to_save)
-		CHECK_TICK_HARD
+		CHECK_TICK
 		var/savedata/client/death_box/DB = k
 		DB.save()
 
