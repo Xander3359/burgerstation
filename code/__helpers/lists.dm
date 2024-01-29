@@ -1,8 +1,5 @@
 #define ADD_SORTED(list, A, cmp_proc) if(!list.len) {list.Add(A)} else {list.Insert(FindElementIndex(A, list, cmp_proc), A)}
 
-/proc/subtypesof(var/prototype)
-	return (typesof(prototype) - prototype)
-
 /proc/listclearnulls(var/list/L)
 	var/start_len = L.len
 	var/list/N = new(start_len)

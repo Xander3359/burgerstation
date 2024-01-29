@@ -346,9 +346,9 @@
 		if(R.abstract)
 			continue
 
-		red += GetRedPart(R.color) * stored_reagents[r_id] * R.color_multiplier
-		green += GetGreenPart(R.color) * stored_reagents[r_id] * R.color_multiplier
-		blue += GetBluePart(R.color) * stored_reagents[r_id] * R.color_multiplier
+		red += GETREDPART(R.color) * stored_reagents[r_id] * R.color_multiplier
+		green += GETGREENPART(R.color) * stored_reagents[r_id] * R.color_multiplier
+		blue += GETBLUEPART(R.color) * stored_reagents[r_id] * R.color_multiplier
 		alpha += R.alpha * stored_reagents[r_id]
 		volume_current += stored_reagents[r_id]
 

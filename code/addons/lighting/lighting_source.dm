@@ -1,17 +1,25 @@
 // This is where the fun begins.
 // These are the main datums that emit light.
 
-/light_source/
+/datum/light_source
+	///The atom we're emitting light from (for example a mob if we're from a flashlight that's being held).
+	var/atom/top_atom
+	///The atom that we belong to.
+	var/atom/source_atom
 
-	var/atom/top_atom        // The atom we're emitting light from (for example a mob if we're from a flashlight that's being held).
-	var/atom/source_atom     // The atom that we belong to.
+	///The turf under the source atom.
+	var/turf/source_turf
 
-	var/turf/source_turf // The turf under the above.
 	var/turf/pixel_turf  // The turf the top_atom _appears_ to be on
-	var/light_power      // Intensity of the emitter light.
-	var/light_range      // The range of the emitted light.
-	var/light_color      // The colour of the light, string, decomposed by parse_light_color()
-	var/light_angle      // The light's emission angle, in degrees.
+
+	///Intensity of the emitter light.
+	var/light_power
+	/// The range of the emitted light.
+	var/light_range
+	/// The colour of the light, string, decomposed by parse_light_color()
+	var/light_color
+	/// The height of the light. The larger this is, the dimmer we'll start
+	var/light_height
 
 	// Variables for keeping track of the colour.
 	var/lum_r
@@ -37,11 +45,14 @@
 	var/tmp/test_y_offset   // How much the Y coord should be offset due to direction.
 	var/tmp/facing_opaque = FALSE
 
-	var/list/lighting_corner/effect_str     // List used to store how much we're affecting corners.
+	/// List used to store how much we're affecting corners.
+	var/list/datum/lighting_corner/effect_str
+
 	var/list/turf/affecting_turfs
 
-	var/applied = FALSE // Whether we have applied our light yet or not.
-
+	/// Whether we have applied our light yet or not.
+	var/applied = FALSE
+	/// whether we are to be added to SSlighting's sources_queue list for an update
 	var/needs_update = LIGHTING_NO_UPDATE
 
 /light_source/PreDestroy()
@@ -96,7 +107,7 @@
 	light_color = source_atom.light_color
 	light_angle = source_atom.light_wedge
 
-	parse_light_color()
+	PARSE_LIGHT_COLOR(src)
 
 	set_top_atom()
 
@@ -127,19 +138,6 @@
 // Will cause the light source to recalculate turfs that were removed or added to visibility only.
 /light_source/proc/vis_update()
 	INTELLIGENT_UPDATE(LIGHTING_VIS_UPDATE)
-
-// Decompile the hexadecimal colour into lumcounts of each perspective.
-/light_source/proc/parse_light_color()
-	if (light_color)
-
-
-		lum_r = GetRedPart   (light_color) / 255
-		lum_g = GetGreenPart (light_color) / 255
-		lum_b = GetBluePart  (light_color) / 255
-	else
-		lum_r = 1
-		lum_g = 1
-		lum_b = 1
 
 #define POLAR_TO_CART_X(R,T) ((R) * cos(T))
 #define POLAR_TO_CART_Y(R,T) ((R) * sin(T))

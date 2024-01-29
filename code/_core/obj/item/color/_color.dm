@@ -41,13 +41,13 @@
 	var/color_to_set = get_selected_color(caller)
 
 	if(strength < 1)
-		var/object_r = GetRedPart(object.color)
-		var/object_g = GetGreenPart(object.color)
-		var/object_b = GetBluePart(object.color)
+		var/object_r = GETREDPART(object.color)
+		var/object_g = GETGREENPART(object.color)
+		var/object_b = GETBLUEPART(object.color)
 
-		var/desired_r = GetRedPart(selected_color)
-		var/desired_g = GetGreenPart(selected_color)
-		var/desired_b = GetBluePart(selected_color)
+		var/desired_r = GETREDPART(selected_color)
+		var/desired_g = GETGREENPART(selected_color)
+		var/desired_b = GETBLUEPART(selected_color)
 
 
 		var/dif_r = object_r - desired_r

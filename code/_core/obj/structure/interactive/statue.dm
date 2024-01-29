@@ -49,9 +49,9 @@
 		I.plane = FLOAT_PLANE
 		I.layer = FLOAT_LAYER
 		var/old_color = initial(color)
-		var/r = (GetRedPart(old_color)/255)*0.5
-		var/g = (GetGreenPart(old_color)/255)*0.5
-		var/b = (GetBluePart(old_color)/255)*0.5
+		var/r = (GETREDPART(old_color)/255)*0.5
+		var/g = (GETGREENPART(old_color)/255)*0.5
+		var/b = (GETBLUEPART(old_color)/255)*0.5
 		var/main = (1 - max(r,g,b))*0.5
 		I.color = list(main,main,main, main,main,main, main,main,main, r,g,b)
 		I.pixel_y = offset_y

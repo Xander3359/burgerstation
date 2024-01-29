@@ -60,14 +60,14 @@
 			var/volume = reagents.volume_current
 			i++
 			if(i % 2)
-				red_01 += GetRedPart(R.color) * volume
-				green_01 += GetGreenPart(R.color) * volume
-				blue_01 += GetBluePart(R.color) * volume
+				red_01 += GETREDPART(R.color) * volume
+				green_01 += GETGREENPART(R.color) * volume
+				blue_01 += GETBLUEPART(R.color) * volume
 				volume_01 += volume
 			else
-				red_02 += GetRedPart(R.color) * volume
-				green_02 += GetGreenPart(R.color) * volume
-				blue_02 += GetBluePart(R.color) * volume
+				red_02 += GETREDPART(R.color) * volume
+				green_02 += GETGREENPART(R.color) * volume
+				blue_02 += GETBLUEPART(R.color) * volume
 				volume_02 += volume
 
 		var/image/I1 = new/image(icon,"[icon_state]_double_left")

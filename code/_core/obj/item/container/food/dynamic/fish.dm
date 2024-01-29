@@ -50,9 +50,9 @@
 			continue
 		if(R.flags_reagent & (FLAG_REAGENT_RAW | FLAG_REAGENT_COOKED))
 			total_meat += amount
-			meat_r += GetRedPart(R.color) * amount
-			meat_g += GetGreenPart(R.color) * amount
-			meat_b += GetBluePart(R.color) * amount
+			meat_r += GETREDPART(R.color) * amount
+			meat_g += GETGREENPART(R.color) * amount
+			meat_b += GETBLUEPART(R.color) * amount
 
 	if(total_meat)
 		meat_r *= (1/total_meat)

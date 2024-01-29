@@ -137,9 +137,9 @@
 
 /obj/item/consumable/food/burger/colored/New(var/desired_loc)
 	..()
-	heal_amount_health = GetRedPart(color)/2.55
-	heal_amount_stamina = GetGreenPart(color)/2.55
-	heal_amount_mana = GetBluePart(color)/2.55
+	heal_amount_health = GETREDPART(color)/2.55
+	heal_amount_stamina = GETGREENPART(color)/2.55
+	heal_amount_mana = GETBLUEPART(color)/2.55
 	var/total_mod = 100/(heal_amount_health + heal_amount_stamina + heal_amount_mana)
 
 	heal_amount_health *= total_mod
