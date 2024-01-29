@@ -21,7 +21,7 @@
 	var/scan_key = 1
 	var/scan_mod = 1
 
-/ai/turret/New(var/desired_loc,var/mob/living/desired_owner)
+/ai/turret/New(desired_loc,mob/living/desired_owner)
 
 	. = ..()
 
@@ -66,7 +66,7 @@
 /ai/turret/deployable
 	var/mob/living/simple/turret/deployable/owner_as_turret
 
-/ai/turret/deployable/New(var/desired_loc,var/mob/living/desired_owner)
+/ai/turret/deployable/New(desired_loc,mob/living/desired_owner)
 	. = ..()
 	owner_as_turret = owner
 

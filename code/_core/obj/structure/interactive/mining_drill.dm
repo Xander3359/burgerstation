@@ -81,7 +81,7 @@
 	if(timeleft(drill_timer))
 		deactivate()
 
-/obj/structure/interactive/mining_drill/proc/activate(var/mob/caller)
+/obj/structure/interactive/mining_drill/proc/activate(mob/caller)
 
 	if(!check_braces())
 		caller.to_chat(span("warning","\The [src] doesn't seem to want to turn on!"))
@@ -99,7 +99,7 @@
 
 	return TRUE
 
-/obj/structure/interactive/mining_drill/proc/deactivate(var/mob/caller)
+/obj/structure/interactive/mining_drill/proc/deactivate(mob/caller)
 
 	if(caller)
 		visible_message(span("notice","\The [caller.name] turns off \the [src.name]."),span("notice","You turn off \the [src.name]."))
@@ -116,7 +116,7 @@
 
 	return TRUE
 
-/obj/structure/interactive/mining_drill/proc/is_valid_brace(var/obj/structure/interactive/mining_brace/MB)
+/obj/structure/interactive/mining_drill/proc/is_valid_brace(obj/structure/interactive/mining_brace/MB)
 	return MB && MB.anchored && get_step(MB,MB.dir) == src.loc
 
 /obj/structure/interactive/mining_drill/proc/check_braces()
@@ -216,12 +216,12 @@
 
 	density = TRUE
 
-/obj/structure/interactive/mining_brace/on_destruction(var/damage = TRUE)
+/obj/structure/interactive/mining_brace/on_destruction(damage = TRUE)
 	create_destruction(get_turf(src),list(/obj/item/material/sheet/ = 5),/material/steel)
 	. = ..()
 	qdel(src)
 
-/obj/structure/interactive/mining_brace/clicked_on_by_object(var/mob/caller,var/atom/object,location,control,params)
+/obj/structure/interactive/mining_brace/clicked_on_by_object(mob/caller,atom/object,location,control,params)
 
 	INTERACT_CHECK
 	INTERACT_CHECK_OBJECT

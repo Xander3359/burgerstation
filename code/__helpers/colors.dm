@@ -16,7 +16,7 @@
 
 
 /*
-/proc/blend_colors(var/color_01,var/color_02,var/power = 0.5)
+/proc/blend_colors(color_01,color_02,power = 0.5)
 	power = clamp(power,0,1)
 	var/new_red = GETREDPART(color_01) + GETREDPART(color_02)*power
 	var/new_green = GETGREENPART(color_01) + GETGREENPART(color_02)*power

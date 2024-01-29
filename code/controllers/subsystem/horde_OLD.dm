@@ -37,7 +37,7 @@ SUBSYSTEM_DEF(horde)
 
 	cpu_usage_max = 50
 
-/datum/controller/subsystem/horse/proc/on_killed_syndicate(var/mob/living/L)
+/datum/controller/subsystem/horse/proc/on_killed_syndicate(mob/living/L)
 
 	if(!(L in tracked_enemies))
 		return FALSE
@@ -176,7 +176,7 @@ SUBSYSTEM_DEF(horde)
 	round_time_next = HORDE_DELAY_WAIT
 	return ..()
 
-/datum/controller/subsystem/horse/proc/spawn_objectives(var/artifact_count = 1, var/kill_count = 3, var/rescue_count = 1)
+/datum/controller/subsystem/horse/proc/spawn_objectives(artifact_count = 1, kill_count = 3, rescue_count = 1)
 
 	var/desired_spawn_objectives = min(artifact_count,length(possible_objective_spawns))
 	var/desired_kill_objectives = min(kill_count,length(SSbosses.living_bosses))

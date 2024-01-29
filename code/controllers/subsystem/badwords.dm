@@ -31,7 +31,7 @@ SUBSYSTEM_DEF(badwords)
 
 	return TRUE
 
-/datum/controller/subsystem/badwords/proc/has_badword(var/text_to_check)
+/datum/controller/subsystem/badwords/proc/has_badword(text_to_check)
 
 
 	if(!space_regex || !text_to_check || !length(bad_word_regex))

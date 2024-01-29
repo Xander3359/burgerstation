@@ -38,7 +38,7 @@
 	post_move(src.loc)
 	return ..()
 
-/mob/living/simple/parrot/post_move(var/atom/old_loc)
+/mob/living/simple/parrot/post_move(atom/old_loc)
 
 	if(dead || !src.z)
 		return ..()

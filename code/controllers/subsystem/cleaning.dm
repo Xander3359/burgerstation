@@ -106,7 +106,7 @@ SUBSYSTEM_DEF(delete)
 
 	return TRUE
 
-/datum/controller/subsystem/delete/proc/queue_delete(var/datum/object_to_delete,var/delete_in = 1,var/safe=FALSE)
+/datum/controller/subsystem/delete/proc/queue_delete(datum/object_to_delete,delete_in = 1,safe=FALSE)
 
 	if(object_to_delete.queue_delete_immune)
 		return FALSE
@@ -121,7 +121,7 @@ SUBSYSTEM_DEF(delete)
 
 	return TRUE
 
-/datum/controller/subsystem/delete/proc/undelete(var/datum/object_to_delete)
+/datum/controller/subsystem/delete/proc/undelete(datum/object_to_delete)
 
 	. = FALSE
 

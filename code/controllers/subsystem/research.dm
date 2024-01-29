@@ -43,5 +43,5 @@ SUBSYSTEM_DEF(research)
 
 	return FALSE
 
-/proc/cmp_highscore(var/list/a,var/list/b)
+/proc/cmp_highscore(list/a,list/b)
 	return b[2] - a[2]

@@ -1,4 +1,4 @@
-/ai/proc/set_hunt_target(var/atom/A)
+/ai/proc/set_hunt_target(atom/A)
 
 	if(!owner || owner.qdeleting)
 		return FALSE
@@ -27,7 +27,7 @@
 
 	return TRUE
 
-/ai/proc/set_objective(var/atom/A)
+/ai/proc/set_objective(atom/A)
 
 	if(!owner || owner.qdeleting)
 		return FALSE
@@ -95,7 +95,7 @@
 
 	return TRUE
 
-/ai/proc/handle_current_objectives(var/tick_rate)
+/ai/proc/handle_current_objectives(tick_rate)
 
 	if(objective_attack.qdeleting || !objective_attack.health) //Object destroyed.
 		set_objective(null)

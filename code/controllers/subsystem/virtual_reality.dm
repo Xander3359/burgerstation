@@ -30,7 +30,7 @@ SUBSYSTEM_DEF(virtual_reality)
 	return TRUE
 
 
-/datum/controller/subsystem/virtual_reality/proc/set_virtual_reality(var/virtual_reality/desired_virtual_reality)
+/datum/controller/subsystem/virtual_reality/proc/set_virtual_reality(virtual_reality/desired_virtual_reality)
 	if(current_virtual_reality)
 		qdel(current_virtual_reality)
 	current_virtual_reality = new desired_virtual_reality
