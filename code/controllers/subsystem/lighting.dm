@@ -37,13 +37,16 @@ SUBSYSTEM_DEF(lighting)
 	// This is the reverse of the above - the position in the array is a dir. Update this if the above changes.
 	var/list/REVERSE_LIGHTING_CORNER_DIAGONAL = list(0, 0, 0, 0, 3, 4, 0, 0, 2, 1)
 
+	///Debug timer for lighting setup
+	var/lighting_setup_timer
+
 
 /datum/controller/subsystem/lighting/proc/start_debug()
-	if(CALLBACK_EXISTS("lighting_debug_end"))
+	if(timeleft(lighting_setup_timer))
 		return FALSE
 	debug_light_sources = TRUE
 	light_source_atom_count = list()
-	CALLBACK("lighting_debug_end",30 SECONDS,src,src::end_debug())
+	lighting_setup_timer = addtimer(CALLBACK(src, PROC_REF(end_debug)), 30 SECONDS)
 	log_debug("Debugging lighting... please wait 30 seconds.")
 	return TRUE
 

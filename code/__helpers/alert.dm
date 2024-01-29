@@ -12,9 +12,11 @@
 		if(!AI || AI.qdeleting || !AI.owner || AI.owner.qdeleting || AI.owner.dead || AI.objective_attack || AI.alert_level > alert_level)
 			continue
 		var/alert_timer
-		var/list/callback_data = CALLBACK_EXISTS("alert_level_change_\ref[AI]")
-		if(alert_timer && callback_data["args"][2] != alert_source) //Already reacting to something else.
+		//var/list/callback_data = CALLBACK_EXISTS("alert_level_change_\ref[AI]")
+		if(alert_timer && alert_source != alert_source) //TODO-TG Make sure this works when auxtools launch
 			continue
+		//if(callback_data && callback_data["args"][2] != alert_source) //Already reacting to something else.
+			//continue
 		if(!within_range(AI.owner,epicenter,range)) //Too far away.
 			continue
 		if(visual && !is_facing_cheap(AI.owner,epicenter))
@@ -26,10 +28,7 @@
 			deltimer(alert_timer)
 			AI.set_alert_level(alert_level,alert_source,epicenter,FALSE)
 		else
-			alert_timer = addtimer(CALLBACK(AI, PROC_REF(set_alert_level), alert_level, alert_source, epicenter, FALSE), CEILING(AI.reaction_time, 1), TIMER_STOPPABLE)
-			CALLBACK("alert_level_change_\ref[AI]",CEILING(AI.reaction_time,1),AI,AI::set_alert_level(),alert_level,alert_source,epicenter,FALSE)
-
-
+			alert_timer = addtimer(CALLBACK(AI, TYPE_PROC_REF(/ai, set_alert_level), alert_level, alert_source, epicenter, FALSE), CEILING(AI.reaction_time, 1), TIMER_STOPPABLE)
 
 /proc/create_alert(range = VIEW_RANGE, turf/epicenter, atom/alert_source, alert_level = ALERT_LEVEL_NOISE, visual=FALSE)
 

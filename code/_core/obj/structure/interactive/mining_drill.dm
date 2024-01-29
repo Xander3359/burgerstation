@@ -26,9 +26,11 @@
 	var/obj/structure/interactive/ore_deposit/floor/found_deposit
 	var/atom/drop_atom
 	var/list/obj/structure/interactive/mining_brace/attached_braces = list()
+	///Timer for drilling
+	var/drill_timer
 
 /obj/structure/interactive/mining_drill/PreDestroy()
-	CALLBACK_REMOVE("\ref[src]_do_drill")
+	deltimer(drill_timer)
 	SShorde.all_drills -= src
 	. = ..()
 
@@ -41,7 +43,7 @@
 
 
 
-/obj/structure/interactive/mining_drill/on_destruction(var/damage = TRUE)
+/obj/structure/interactive/mining_drill/on_destruction(damage = TRUE)
 	create_destruction(get_turf(src),list(/obj/item/material/sheet/ = 5),/material/steel)
 	. = ..()
 	qdel(src)
@@ -50,7 +52,7 @@
 
 	. = ..()
 
-	if(CALLBACK_EXISTS("\ref[src]_do_drill"))
+	if(timeleft(drill_timer))
 		icon_state = "mining_drill_active"
 	else if(anchored)
 		icon_state = "mining_drill_braced"
@@ -59,22 +61,25 @@
 
 
 
-/obj/structure/interactive/mining_drill/clicked_on_by_object(var/mob/caller,var/atom/object,location,control,params)
+/obj/structure/interactive/mining_drill/clicked_on_by_object(mob/caller, atom/object, location, control, params)
 
 	INTERACT_CHECK
 	INTERACT_CHECK_OBJECT
 	INTERACT_DELAY(5)
 
-	if(CALLBACK_EXISTS("\ref[src]_do_drill"))
+	if(timeleft(drill_timer))
 		deactivate(caller)
 	else
 		activate(caller)
 
 	return TRUE
 
-/obj/structure/interactive/mining_drill/post_move(var/atom/old_loc)
+/obj/structure/interactive/mining_drill/post_move(atom/old_loc)
 	. = ..()
-	if(. && CALLBACK_EXISTS("\ref[src]_do_drill")) deactivate()
+	if(!.)
+		return
+	if(timeleft(drill_timer))
+		deactivate()
 
 /obj/structure/interactive/mining_drill/proc/activate(var/mob/caller)
 
@@ -89,7 +94,7 @@
 
 	SShorde.all_drills[src] = world.time + 15 SECONDS
 	set_anchored(TRUE)
-	CALLBACK("\ref[src]_do_drill",1.8 SECONDS,src,src::do_drill())
+	drill_timer = addtimer(CALLBACK(src, PROC_REF(do_drill)), 1.8 SECONDS, TIMER_STOPPABLE)
 	update_sprite()
 
 	return TRUE
@@ -106,7 +111,7 @@
 	drop_atom = null
 	attached_braces.Cut()
 	set_anchored(FALSE)
-	CALLBACK_REMOVE("\ref[src]_do_drill")
+	deltimer(drill_timer)
 	update_sprite()
 
 	return TRUE
@@ -188,7 +193,7 @@
 
 	play_sound('sound/machines/mining_drill.ogg',current_turf)
 
-	CALLBACK("\ref[src]_do_drill",1.8 SECONDS,src,src::do_drill())
+	drill_timer = addtimer(CALLBACK(src, PROC_REF(do_drill)), 1.8 SECONDS, TIMER_STOPPABLE)
 
 	return TRUE
 

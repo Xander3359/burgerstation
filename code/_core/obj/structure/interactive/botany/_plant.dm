@@ -187,7 +187,7 @@
 	if(new_chunk)
 		new_chunk.plants += src
 
-/obj/structure/interactive/plant/proc/on_life(var/tick_rate=1) //Measured in game ticks.
+/obj/structure/interactive/plant/proc/on_life(tick_rate = 1) //Measured in game ticks.
 
 	var/rate = TICKS2DS(tick_rate)
 	var/plant_type/P = SSbotany.all_plant_types[plant_type]

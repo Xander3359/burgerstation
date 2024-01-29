@@ -97,7 +97,7 @@ SUBSYSTEM_DEF(explosion)
 
 	return TRUE
 
-/datum/controller/subsystem/explosion/proc/explode(turf/desired_turf, desired_range, atom/desired_owner, atom/desired_source, desired_loyalty_tag, velocity_dir = 0x0, multiplier = 1)
+/proc/explode(turf/desired_turf, desired_range, atom/desired_owner, atom/desired_source, desired_loyalty_tag, velocity_dir = 0x0, multiplier = 1)
 
 	if(desired_range <= 0)
 		return FALSE
@@ -131,7 +131,7 @@ SUBSYSTEM_DEF(explosion)
 
 
 
-/datum/controller/subsystem/explosion/proc/emp(turf/desired_turf, desired_range, atom/desired_owner, atom/desired_source, desired_loyalty_tag, multiplier = 1)
+/proc/emp(turf/desired_turf, desired_range, atom/desired_owner, atom/desired_source, desired_loyalty_tag, multiplier = 1)
 
 	desired_range = min(desired_range,VIEW_RANGE)
 
@@ -148,7 +148,7 @@ SUBSYSTEM_DEF(explosion)
 
 
 
-/datum/controller/subsystem/explosion/proc/firebomb(turf/desired_turf, desired_range, atom/desired_owner, atom/desired_source, desired_loyalty_tag, momentum = NORTH|EAST|SOUTH|WEST, multiplier = 1)
+/proc/firebomb(turf/desired_turf, desired_range, atom/desired_owner, atom/desired_source, desired_loyalty_tag, momentum = NORTH|EAST|SOUTH|WEST, multiplier = 1)
 
 	if(desired_range <= 0)
 		return FALSE

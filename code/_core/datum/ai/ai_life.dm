@@ -21,7 +21,7 @@
 
 	return TRUE
 
-/ai/proc/on_life(var/tick_rate=1)
+/ai/proc/on_life(tick_rate = 1)
 
 	//Safeties.
 	if(objective_attack && !objective_attack.z)
@@ -41,7 +41,7 @@
 		if(!master_ai) //Find objectives only if you don't belong to a master.
 			objective_ticks += tick_rate
 			var/actual_objective_delay = get_objective_delay()
-			if(objective_ticks >= actual_objective_delay && !CALLBACK_EXISTS("set_new_objective_\ref[src]"))
+			if(objective_ticks >= actual_objective_delay && !timeleft(objective_timer))
 				objective_ticks = 0
 				if(objective_attack && frustration_attack < frustration_attack_threshold)
 					if(handle_current_objectives(actual_objective_delay) && !is_living(objective_attack))

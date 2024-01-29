@@ -138,7 +138,7 @@
 
 /ai/proc/find_new_objectives()
 
-	if(CALLBACK_EXISTS("set_new_objective_\ref[src]"))
+	if(timeleft(objective_timer))
 		return FALSE
 
 	//Find a new living mob target.
@@ -174,7 +174,7 @@
 				var/mob/M = best_target
 				if(M.client)
 					M.to_chat(span("debug","Setting delayed objective target ([reaction_time])."))
-			CALLBACK("set_new_objective_\ref[src]",reaction_time,src,src::set_objective(),best_target)
+			objective_timer = addtimer(CALLBACK(src, PROC_REF(set_objective), best_target), reaction_time, TIMER_STOPPABLE)
 			return
 
 		set_objective(best_target) //Forced set objective.
@@ -261,7 +261,7 @@
 		.[L] = detection_level
 		CHECK_TICK
 
-/ai/proc/try_investigate(var/atom/desired_target,var/cooldown=reaction_time,var/force_if_on_cooldown=FALSE)
+/ai/proc/try_investigate(atom/desired_target, cooldown = reaction_time, force_if_on_cooldown = FALSE)
 
 	if(!desired_target)
 		return FALSE
@@ -286,7 +286,7 @@
 
 	return TRUE
 
-/ai/proc/investigate(var/atom/desired_target)
+/ai/proc/investigate(atom/desired_target)
 
 	if(!desired_target)
 		return FALSE

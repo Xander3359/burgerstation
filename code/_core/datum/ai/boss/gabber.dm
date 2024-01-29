@@ -190,7 +190,7 @@
 		if(owner_as_gabber.has_status_effect(IMMORTAL))
 			return FALSE
 
-/ai/boss/gabber/on_life(var/tick_rate=1)
+/ai/boss/gabber/on_life(tick_rate = 1)
 
 	. = ..()
 

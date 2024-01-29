@@ -163,6 +163,9 @@
 
 	var/queue_find_new_objectives = FALSE
 
+	///Timer attached to our current objective
+	var/objective_timer
+
 /ai/proc/set_master_ai(var/ai/target_ai)
 
 	if(target_ai == master_ai)

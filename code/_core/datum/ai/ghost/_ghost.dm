@@ -222,7 +222,7 @@
 
 	owner.handle_movement(tick_rate)
 
-	if(!CALLBACK_EXISTS("set_new_objective_\ref[src]") && (objective_attack || (anger >= 100 && last_teleport + 4 SECONDS <= world.time)))
+	if(!timeleft(objective_timer) && (objective_attack || (anger >= 100 && last_teleport + 4 SECONDS <= world.time)))
 		var/no_objective = !objective_attack
 		objective_ticks += tick_rate
 		owner_as_ghost.desired_alpha = 255

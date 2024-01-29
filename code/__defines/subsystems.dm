@@ -106,9 +106,9 @@
 // The numbers just define the ordering, they are meaningless otherwise.
 
 #define INIT_ORDER_GARBAGE 99
+#define INIT_ORDER_TIMETRACK 46
 #define INIT_ORDER_TIMER 1
 #define INIT_ORDER_DEFAULT 0
-#define INIT_ORDER_TIMETRACK 46
 #define INIT_ORDER_CHAT -100 //Should be last to ensure chat remains smooth during init.
 
 // Subsystem fire priority, from lowest to highest priority

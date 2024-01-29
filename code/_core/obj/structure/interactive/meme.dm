@@ -4,10 +4,12 @@
 	desc_extended = "A special structure that does something bad when you look-- You looked, too late."
 	icon = 'icons/obj/item/meme.dmi'
 	icon_state = "lol"
+	///Explode timer
+	var/explode_timer
 
 /obj/structure/interactive/dont_look/Finalize()
 	. = ..()
-	CALLBACK("\ref[src]_look_delete",60 SECONDS,src,src::callback_delete())
+	addtimer(CALLBACK(src, PROC_REF(callback_delete)), 60 SECONDS)
 	if(is_turf(src.loc))
 		START_THINKING(src)
 
@@ -35,7 +37,7 @@
 
 /obj/structure/interactive/dont_look/proc/check_look()
 
-	if(CALLBACK_EXISTS("\ref[src]_do_explode"))
+	if(timeleft(explode_timer))
 		return FALSE
 
 	var/found_viewers = 0
@@ -48,7 +50,7 @@
 		found_viewers += 1
 
 	if(found_viewers > 0)
-		CALLBACK("\ref[src]_do_explode",1 SECONDS,src,src::do_explode())
+		explode_timer = addtimer(CALLBACK(src, PROC_REF(do_explode)), 1 SECONDS)
 		return TRUE
 
 	return FALSE
