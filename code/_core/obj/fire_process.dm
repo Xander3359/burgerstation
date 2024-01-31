@@ -60,6 +60,9 @@
 
 	vis_flags = VIS_INHERIT_PLANE | VIS_INHERIT_ID
 
+	///Timer to deal damage again
+	var/fire_ground_damage_timer
+
 /obj/fire_process/proc/do_damage(atom/movable/victim,distance_check=0)
 
 	if(!victim || !victim.z || !src.z || victim.z != src.z)
@@ -68,7 +71,7 @@
 	if(multiplier <= 0)
 		return FALSE
 
-	if(CALLBACK_EXISTS("\ref[victim]_\ref[src]_do_fire_ground_damage"))
+	if(timeleft(fire_ground_damage_timer))
 		return FALSE
 
 	if(is_living(victim))
@@ -106,7 +109,7 @@
 			fire_power += fire_power_to_add
 		momentum = NORTH | EAST | SOUTH | WEST
 
-	CALLBACK("\ref[victim]_\ref[src]_do_fire_ground_damage",10,src,src::do_damage(),victim) //Check again in 10 seconds.
+	fire_ground_damage_timer = addtimer(CALLBACK(src, PROC_REF(do_damage), victim), 10)
 
 /obj/fire_process/Crossed(atom/movable/O,atom/OldLoc)
 	. = ..()
@@ -161,7 +164,7 @@
 		multiplier = 0
 		SSexplosion.active_fires -= src
 		animate(src,alpha=0,time=10)
-		CALLBACK("fire_delete_\ref[src]",10,src,src::do_delete())
+		addtimer(CALLBACK(src, PROC_REF(do_delete)), 10)
 		return FALSE
 
 	fire_power = min(fire_power,300) //Limit of 30 seconds.

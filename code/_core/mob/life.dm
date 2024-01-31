@@ -20,14 +20,14 @@
 
 	if(!plane_master_lighting)
 		return FALSE
-
-	if(CALLBACK_EXISTS("\ref[src]_nightvision"))
+	var/night_vision_timer
+	if(timeleft(night_vision_timer))
 		return FALSE
 
 	var/desired_lighting_alpha = get_lighting_alpha()
 
 	if(plane_master_lighting.alpha != desired_lighting_alpha)
 		animate(plane_master_lighting,alpha=desired_lighting_alpha,time=NIGHTVISION_TIME)
-		CALLBACK("\ref[src]_nightvision",NIGHTVISION_TIME,src,src::handle_lighting_alpha())
+		night_vision_timer = addtimer(CALLBACK(src, PROC_REF(handle_lighting_alpha)), NIGHTVISION_TIME)
 
 	return TRUE

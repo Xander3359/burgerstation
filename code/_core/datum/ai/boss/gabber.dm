@@ -137,7 +137,7 @@
 		var/mob/living/advanced/A = objective_attack
 		var/obj/item/right_item = A.inventories_by_id[BODY_HAND_RIGHT_HELD]?.get_top_object()
 		var/obj/item/left_item = A.inventories_by_id[BODY_HAND_LEFT_HELD]?.get_top_object()
-		if(prob(80) && (left_item && CALLBACK_EXISTS("hit_\ref[left_item]")) || (right_item && CALLBACK_EXISTS("hit_\ref[right_item]")))
+		if(prob(80) && (left_item && timeleft(weapon_timer)) || (right_item && timeleft(weapon_timer)))
 			start_block()
 
 	//Trap attack.

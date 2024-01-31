@@ -293,6 +293,11 @@
 
 	var/was_killed = FALSE //This is set to true if the mob died at least once.
 
+	///Timer for becoming unrevivable
+	var/unrevivable_timer
+	///Timer for switching intents
+	var/intent_timer
+
 
 /mob/living/PreDestroy()
 

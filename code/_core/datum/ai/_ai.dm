@@ -165,6 +165,8 @@
 
 	///Timer attached to our current objective
 	var/objective_timer
+	///Timer for investigating
+	var/investigate_timer
 
 /ai/proc/set_master_ai(ai/target_ai)
 

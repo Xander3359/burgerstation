@@ -155,6 +155,9 @@
 
 	var/allow_damage_numbers = TRUE
 
+	///Timer for the damagetype
+	var/weapon_timer
+
 /damagetype/proc/get_examine_text(mob/caller)
 	/*
 	. = "<table>"
@@ -192,8 +195,8 @@
 	if(!victim)
 		victim = get_step(attacker,attacker.dir)
 	. = max(1,do_attack_animation(attacker,victim,weapon))
-	CALLBACK("\ref[attacker]_\ref[victim]_[world.time]_miss_sound",.*0.125,src,src::do_miss_sound(),attacker,victim,weapon)
-	CALLBACK("\ref[attacker]_\ref[victim]_[world.time]_miss_message",.*0.125,src,src::display_miss_message(),attacker,victim,weapon,null,"missed")
+	addtimer(CALLBACK(src, PROC_REF(do_miss_sound), attacker, victim, weapon), .*0.125)
+	addtimer(CALLBACK(src, PROC_REF(display_miss_message), attacker, victim, weapon, null, "missed"), .*0.125)
 	if(is_living(victim) && is_living(attacker))
 		var/mob/living/V = victim
 		var/mob/living/A = attacker
@@ -287,7 +290,7 @@
 
 /damagetype/proc/perform_clash(atom/attacker,atom/victim,atom/weapon_attacker,atom/weapon_victim)
 	. = max(1,do_attack_animation(attacker,victim,weapon_attacker))
-	CALLBACK("\ref[attacker]_\ref[victim]_[world.time]_clash_sound",.*0.125,src,src::do_clash_effect(),attacker,victim,weapon_attacker)
+	addtimer(CALLBACK(src, PROC_REF(do_clash_effect), attacker, victim, weapon_attacker), .*0.125)
 	return .
 
 /damagetype/proc/do_clash_effect(atom/attacker,atom/victim,atom/weapon)
@@ -319,8 +322,7 @@
 
 	play_sound('sound/effects/power_attack.ogg',get_turf(attacker))
 
-	CALLBACK("swing_\ref[weapon]",local_power_attack_delay,src,src::swing(),attacker,victims,weapon,hit_objects,blamed,damage_multiplier)
-
+	addtimer(CALLBACK(src, PROC_REF(swing), attacker, victims, weapon, hit_objects, blamed, damage_multiplier), local_power_attack_delay)
 
 /damagetype/proc/swing(atom/attacker,list/atom/victims = list(),atom/weapon,list/atom/hit_objects = list(),atom/blamed,damage_multiplier=1)
 
@@ -353,18 +355,16 @@
 
 		if(is_advanced(victim))
 			var/mob/living/advanced/A = victim
-			if(i==1 && !ismob(weapon))
+			if(i==1 && !ismob(weapon)) //TODO-TG make sure this isn't fucked
 				var/obj/item/left_item = A.inventories_by_id[BODY_HAND_LEFT_HELD]?.get_top_object()
-				if(left_item && CALLBACK_EXISTS("hit_\ref[left_item]"))
-					var/list/callback_data = CALLBACK_EXISTS("hit_\ref[left_item]")
-					if(callback_data["time"] <= world.time + 0.25 SECONDS)
-						CALLBACK_REMOVE("hit_\ref[left_item]")
+				if(left_item && timeleft(weapon_timer))
+					if(timeleft(weapon_timer) <= world.time + 0.25 SECONDS)
+						deltimer(weapon_timer)
 						return perform_clash(attacker,victim,weapon,left_item)
 				var/obj/item/right_item = A.inventories_by_id[BODY_HAND_RIGHT_HELD]?.get_top_object()
-				if(right_item && CALLBACK_EXISTS("hit_\ref[right_item]"))
-					var/list/callback_data = CALLBACK_EXISTS("hit_\ref[right_item]")
-					if(callback_data["time"] <= world.time + 0.25 SECONDS)
-						CALLBACK_REMOVE("hit_\ref[right_item]")
+				if(right_item && timeleft(weapon_timer))
+					if(timeleft(weapon_timer) <= world.time + 0.25 SECONDS)
+						deltimer(weapon_timer)
 						return perform_clash(attacker,victim,weapon,right_item)
 			/*
 			if(istype(victim,/mob/living/advanced/stand/))
@@ -403,7 +403,7 @@
 	if(!length(final_victims))
 		return perform_miss(attacker,get_step(attacker,attacker.dir),weapon)
 
-	CALLBACK("hit_\ref[weapon]",CEILING(.*0.125,1),src,src::process_damage_group(),attacker,final_victims,weapon,blamed,damage_multiplier)
+	weapon_timer = addtimer(CALLBACK(src, PROC_REF(process_damage_group), attacker, final_victims, weapon, blamed, damage_multiplier), CEILING(.*0.125,1), TIMER_STOPPABLE)
 
 	return .
 

@@ -20,9 +20,9 @@
 	animate(src, alpha=255, time=meteor_time*0.5)
 	animate(src, pixel_z=0, pixel_w=0, time=meteor_time, transform = get_base_transform())
 
-	CALLBACK("meteor_telegraph_\ref[src]",meteor_time-20,src,src::create_telegraph())
+	addtimer(CALLBACK(src, PROC_REF(create_telegraph)), meteor_time - 20)
 
-	CALLBACK("meteor_land_\ref[src]",meteor_time,src,src::land())
+	addtimer(CALLBACK(src, PROC_REF(land)), meteor_time)
 
 	return ..()
 
@@ -32,7 +32,7 @@
 /obj/effect/falling_meteor/proc/land()
 	explode(get_turf(src),2,src,src,multiplier = 5)
 	src.alpha = 0
-	CALLBACK("delete_\ref[src]",3 SECONDS,src,.datum/proc/delete)
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/datum, delete)), 3 SECONDS)
 	return TRUE
 
 /obj/effect/falling_fireball
@@ -55,12 +55,12 @@
 	animate(src, alpha=255, time=meteor_time*0.5)
 	animate(src, pixel_z=0, pixel_w=0, time=meteor_time*0.95, transform = get_base_transform())
 
-	CALLBACK("fireball_land_\ref[src]",meteor_time,src,src::land())
+	addtimer(CALLBACK(src, PROC_REF(land)), meteor_time)
 
 	return ..()
 
 /obj/effect/falling_fireball/proc/land()
 	explode(get_turf(src),2,src,src,desired_loyalty_tag=stored_loyalty_tag)
 	src.alpha = 0
-	CALLBACK("delete_\ref[src]",3 SECONDS,src,.datum/proc/delete)
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/datum, delete)), 3 SECONDS)
 	return TRUE

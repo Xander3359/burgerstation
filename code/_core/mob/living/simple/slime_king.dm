@@ -76,6 +76,9 @@
 
 	var/rage_mode = FALSE
 
+	///Timer for absorbing slimes
+	var/absorb_slimes_timer
+
 /mob/living/simple/slime_king/Destroy()
 	linked_active_slimes.Cut()
 	linked_active_slimes = null
@@ -276,7 +279,7 @@
 							should_break = TRUE
 							break
 
-			CALLBACK("\ref[src]_slime_wave_[i]_[j]",j,src,src::create_slime_tile(),old_turf,should_break)
+			addtimer(CALLBACK(src, PROC_REF(create_slime_tile), old_turf, should_break), j)
 			if(should_break)
 				if(i==0 && (health.health_current <= health.health_max*0.5))
 					remove_status_effect(PARALYZE)
@@ -400,9 +403,9 @@
 		if(!TA) continue
 		var/delay = (abs(tx) + abs(ty))*3
 		if(build_walls && (abs(tx) == size || abs(ty) == size))
-			CALLBACK("\ref[src]_build_wall_[tx]_[ty]",delay,src,src::create_slime_wall(),TA)
+			addtimer(CALLBACK(src, PROC_REF(create_slime_wall), TA), delay)
 		else
-			CALLBACK("\ref[src]_build_wall_[tx]_[ty]",delay,src,src::create_slime_tile(),TA)
+			addtimer(CALLBACK(src, PROC_REF(create_slime_tile), TA), delay)
 
 	next_slime_house = world.time + 60 SECONDS
 	next_special_attack = world.time + 10 + size*2*3*2
@@ -465,13 +468,13 @@
 	absorbs_left--
 
 	if(absorbs_left > 0)
-		CALLBACK("\ref[src]_absorb_slimes",2,src,src::absorb_slimes(),absorbs_left)
+		absorb_slimes_timer = addtimer(CALLBACK(src, PROC_REF(absorb_slimes), absorbs_left), 2)
 
 	return TRUE
 
 /mob/living/simple/slime_king/proc/start_absorb()
 
-	if(heal_amount_current >= heal_amount_max || next_slime_absorb_spam > world.time || CALLBACK_EXISTS("\ref[src]_absorb_slimes"))
+	if(heal_amount_current >= heal_amount_max || next_slime_absorb_spam > world.time || timeleft(absorb_slimes_timer))
 		return FALSE
 
 	var/turf/T = get_turf(src)

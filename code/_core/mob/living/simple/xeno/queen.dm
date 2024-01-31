@@ -94,7 +94,7 @@ var/mob/living/simple/xeno/queen/tracked_xeno_queen
 
 /mob/living/simple/xeno/queen/proc/inhale()
 	do_say("&#42;inhales&#42;",should_sanitize = FALSE)
-	CALLBACK("queen_screech_\ref[src]",4 SECONDS,src,src::screech())
+	addtimer(CALLBACK(src, PROC_REF(screech)), 4 SECONDS)
 	return TRUE
 
 /mob/living/simple/xeno/queen/proc/screech()

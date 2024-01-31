@@ -19,6 +19,11 @@
 
 	var/has_stored_cyborg = FALSE
 
+	///Start creating timer
+	var/start_creating_timer
+	///Create silicon timer
+	var/create_silicon_timer
+
 /mob/living/simple/silicon/spawner/Destroy()
 	. = ..()
 	active_silicons.Cut()
@@ -46,12 +51,12 @@
 			active_silicons -= L
 
 	if(length(active_silicons) > silicon_limit)
-		CALLBACK("\ref[src]_start_creating",10 SECONDS,src,src::start_creating()) //Try again later.
+		start_creating_timer = addtimer(CALLBACK(src, PROC_REF(start_creating)), 10 SECONDS)
 		return FALSE
 
 	icon_state = "[initial(icon_state)]_creating"
 
-	CALLBACK("\ref[src]_create_silicon",20 SECONDS,src,src::create_silicon())
+	create_silicon_timer = addtimer(CALLBACK(src, PROC_REF(create_silicon)), 20 SECONDS)
 
 	return TRUE
 
@@ -80,6 +85,6 @@
 	active_silicons += SM
 	has_stored_cyborg = FALSE
 
-	CALLBACK("\ref[src]_start_creating",20 SECONDS,src,src::start_creating()) //Repeat.
+	start_creating_timer = addtimer(CALLBACK(src, PROC_REF(start_creating)), 20 SECONDS)
 
 	return TRUE

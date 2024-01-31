@@ -82,6 +82,9 @@
 
 	level = 35
 
+	///Timer to stop charge
+	var/stop_charge_timer
+
 /mob/living/simple/bubblegum/post_death()
 	. = ..()
 	charge_steps = 0
@@ -149,15 +152,15 @@
 	return ..()
 
 /mob/living/simple/bubblegum/proc/start_charge()
-	if(CALLBACK_EXISTS("stop_charge_\ref[src]"))
+	if(timeleft(stop_charge_timer))
 		return FALSE
 	charge_dir = dir
 	charge_steps = VIEW_RANGE
-	CALLBACK("stop_charge_\ref[src]",2 SECONDS,src,src::finish_charge()) //Fallback time.
+	stop_charge_timer = addtimer(CALLBACK(src, PROC_REF(finish_charge)), 2 SECONDS) //Fallback time.
 	return TRUE
 
 /mob/living/simple/bubblegum/proc/finish_charge()
 	charge_dir = 0
 	charge_steps = 0
-	CALLBACK_REMOVE("stop_charge_\ref[src]")
+	deltimer(stop_charge_timer)
 	return TRUE

@@ -146,6 +146,7 @@
 #include "code\__HELPERS\lists.dm"
 #include "code\__HELPERS\loyalty_iff.dm"
 #include "code\__HELPERS\math.dm"
+#include "code\__HELPERS\mobs.dm"
 #include "code\__HELPERS\name.dm"
 #include "code\__HELPERS\nameof.dm"
 #include "code\__HELPERS\path.dm"

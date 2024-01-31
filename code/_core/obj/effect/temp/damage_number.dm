@@ -35,7 +35,7 @@
 
 /obj/effect/damage_number/proc/fade()
 	animate(src,alpha=0,time = 5)
-	CALLBACK("\ref[src]_remove_damage_number",5,src,src::remove())
+	addtimer(CALLBACK(src, PROC_REF(remove)), 5)
 	return TRUE
 
 /obj/effect/damage_number/proc/remove()
@@ -70,7 +70,7 @@
 
 	var/desired_text = current_damage
 	maptext = "<div style='font-size:[desired_size];color:[desired_color];text-align:center;text-shadow:0px 0px 2px #000000'>[desired_text]</div>"
-	CALLBACK("\ref[src]_fade_damage_number",10,src,src::fade())
+	addtimer(CALLBACK(src, PROC_REF(fade)), 10)
 	return TRUE
 
 
@@ -96,7 +96,7 @@
 	. = ..()
 	maptext = "<div style='font-size:0.25;color:#FFFFFF;text-align:center;text-shadow:0px 0px 2px #000000;'>[desired_value]</div>"
 	animate(src,pixel_x = initial(pixel_x) + rand(-TILE_SIZE,TILE_SIZE),pixel_y=initial(pixel_y)+rand(0,TILE_SIZE),time=duration*0.5,easing = CIRCULAR_EASING | EASE_OUT)
-	CALLBACK("\ref[src]_fade_status",duration-5,src,src::fade())
+	addtimer(CALLBACK(src, PROC_REF(fade)), duration - 5)
 
 /obj/effect/temp/status_effect/proc/fade()
 	animate(src,alpha=0,time = 5)

@@ -22,6 +22,9 @@
 
 	var/permanent = FALSE
 
+	///timer for the tile to delete itself
+	var/self_delete_timer
+
 /obj/structure/interactive/slime_tile/permanent
 	permanent = TRUE
 
@@ -44,7 +47,7 @@
 		time = 5
 	)
 	if(!permanent)
-		CALLBACK("\ref[src]_telegraph_delete",300,src,src::telegraph_delete())
+		adddtimer(CALLBACK(src, PROC_REF(telegraph_delete)), 300)
 
 /obj/structure/interactive/slime_tile/proc/telegraph_delete()
 	if(src.qdeleting)
@@ -52,7 +55,7 @@
 	var/matrix/M = matrix()
 	M.Scale(0)
 	animate(src,transform=M,alpha=0,time=20)
-	CALLBACK("\ref[src]_timed_destruction",20,src,src::do_delete())
+	self_delete_timer = addtimer(CALLBACK(src, PROC_REF(do_delete)), 20)
 
 /obj/structure/interactive/slime_tile/proc/do_delete()
 	if(src.qdeleting)
@@ -84,16 +87,16 @@
 	GENERATE(H)
 	FINALIZE(H)
 
-	CALLBACK("\ref[src]_heal_\ref[L]",10,src,src::heal(),L)
+	addtimer(CALLBACK(src, PROC_REF(heal), L), 10)
 
 	return TRUE
 
 /obj/structure/interactive/slime_tile/Crossed(atom/movable/O,atom/OldLoc)
 	. = ..()
-	if(!src.qdeleting && !CALLBACK_EXISTS("\ref[src]_timed_destruction") && is_living(O))
+	if(!src.qdeleting && !timeleft(self_delete_timer) && is_living(O))
 		var/mob/living/L = O
 		if(L.loyalty_tag == "Slime")
-			CALLBACK("\ref[src]_heal_\ref[L]",10,src,src::heal(),L)
+			addtimer(CALLBACK(src, PROC_REF(heal), L), 10)
 		else
 			L.add_status_effect(SLOW,20,20)
 			play_sound('sound/effects/slimed.ogg',get_turf(src))

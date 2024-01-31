@@ -10,6 +10,9 @@ obj/structure/interactive/shower
 
 	reagents = /reagent_container/shower
 
+	///Timer for showering
+	var/shower_timer
+
 obj/structure/interactive/shower/clicked_on_by_object(var/mob/caller,var/atom/object,location,control,params)
 
 	INTERACT_CHECK
@@ -35,7 +38,7 @@ obj/structure/interactive/shower/set_dir(var/desired_dir,var/force=FALSE)
 			pixel_y = 0
 
 obj/structure/interactive/shower/PreDestroy()
-	CALLBACK_REMOVE("\ref[src]_shower")
+	deltimer(shower_timer)
 	. = ..()
 
 /obj/structure/interactive/shower/proc/set_active(desired_active=TRUE)
@@ -84,7 +87,7 @@ obj/structure/interactive/shower/PreDestroy()
 
 		play_sound(pick('sound/effects/shower/shower_mid1.ogg','sound/effects/shower/shower_mid2.ogg','sound/effects/shower/shower_mid3.ogg'),T)
 
-		CALLBACK("\ref[src]_shower",1.5 SECONDS,src,src::shower())
+		shower_timer = addtimer(CALLBACK(src, PROC_REF(shower)), 1.5 SECONDS)
 	else
 		update_sprite()
 

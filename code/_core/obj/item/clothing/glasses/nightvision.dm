@@ -23,6 +23,9 @@
 
 	var/nightvision_power = 100 //Alpha to remove.
 
+	///Timer to drain the cell
+	var/nv_drain_timer
+
 /obj/item/clothing/glasses/nightvision/get_base_value()
 	. = ..()
 	// https://www.desmos.com/calculator/hjwomvwuwm
@@ -30,7 +33,7 @@
 	. = CEILING(.,1)
 
 /obj/item/clothing/glasses/nightvision/PreDestroy()
-	CALLBACK_REMOVE("\ref[src]_drain_power")
+	deltimer(nv_drain_timer)
 	QDEL_NULL(stored_cell)
 	. = ..()
 
@@ -126,7 +129,7 @@
 		set_active(caller,FALSE)
 		return FALSE
 
-	CALLBACK("\ref[src]_drain_power",1 SECONDS,src,src::drain_power(),caller)
+	nv_drain_timer = addtimer(CALLBACK(src, PROC_REF(drain_power), caller), 1 SECONDS, TIMER_STOPPABLE)
 
 	return TRUE
 

@@ -16,6 +16,9 @@
 
 	rarity = RARITY_RARE
 
+	///Timer to stop a tape player
+	var/cassette_timer
+
 /obj/item/cassette_player/get_examine_list(mob/examiner)
 	. = ..()
 	if(stored_tape)
@@ -48,7 +51,7 @@
 		stop_music_track(current_hearer.client)
 		if(playing) current_hearer.to_chat(span("notice","\The [src.name] turns off."))
 		HOOK_REMOVE("post_move","loc_check_\ref[src]",current_hearer)
-		CALLBACK_REMOVE("tape_stop_\ref[src]")
+		deltimer(cassette_timer)
 	playing = FALSE
 	update_sprite()
 
@@ -60,7 +63,7 @@
 		play_music_track(stored_tape.stored_track,current_hearer.client)
 		if(!playing) current_hearer.to_chat(span("notice","\The [src.name] turns on."))
 		HOOK_ADD("post_move","loc_check_\ref[src]",current_hearer,src,src::check_valid())
-		CALLBACK("tape_stop_\ref[src]",(T.length) SECONDS,src,src::disable())
+		cassette_timer = addtimer(CALLBACK(src, PROC_REF(disable)), (T.length) SECONDS, TIMER_STOPPABLE)
 	playing = TRUE
 	update_sprite()
 

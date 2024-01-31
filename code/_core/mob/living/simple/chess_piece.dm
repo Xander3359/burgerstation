@@ -266,6 +266,9 @@
 
 	listener = TRUE
 
+	///Timer for response
+	var/king_response_timer
+
 var/global/regex/bad_opinion = regex(@"en *passant *is *n[^f]*forced")
 
 /mob/living/simple/chess_piece/king/proc/give_response()
@@ -289,8 +292,8 @@ var/global/regex/bad_opinion = regex(@"en *passant *is *n[^f]*forced")
 	if(get_dist(source,src) > VIEW_RANGE)
 		return ..()
 
-	if(!src.processing && !CALLBACK_EXISTS("\ref[src]_response") && length(raw_text) && bad_opinion.Find(raw_text))
-		CALLBACK("\ref[src]_response",rand(10,20),src,src::give_response())
+	if(!src.processing && !timeleft(king_response_timer) && length(raw_text) && bad_opinion.Find(raw_text))
+		king_response_timer = addtimer(CALLBACK(src, PROC_REF(give_response)), rand(10, 20))
 
 	. = ..()
 

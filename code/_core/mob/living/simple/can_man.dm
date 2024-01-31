@@ -72,6 +72,8 @@
 
 	var/minigun_delay = 0 //delay between each shot
 
+	var/minigun_sweep_timer
+
 /mob/living/simple/can_man/post_death()
 	. = ..()
 	charge_steps = 0
@@ -86,13 +88,13 @@
 		icon_state = "dead"
 
 /mob/living/simple/can_man/is_busy()
-	if(CALLBACK_EXISTS("\ref[src]_minigun_sweep"))
+	if(timeleft(minigun_sweep_timer))
 		return TRUE
 	. = ..()
 
 /mob/living/simple/can_man/proc/telegraph_special_minigun_sweep(atom/target)
 	play_sound('sound/mob/can_man/rev_start.ogg',get_turf(src))
-	CALLBACK("\ref[src]_minigun_sweep",10,src,src::do_special_minigun_sweep(),target,30,30)
+	minigun_sweep_timer = addtimer(CALLBACK(src, PROC_REF(do_special_minigun_sweep), target, 30, 30), 10)
 
 /mob/living/simple/can_man/proc/do_special_minigun_sweep(atom/target,shots_current,shots_max)
 
@@ -110,7 +112,7 @@
 		play_sound('sound/mob/can_man/rev_stop.ogg',get_turf(src))
 		return TRUE
 
-	CALLBACK("\ref[src]_minigun_sweep",0.25 + max(0,shots_current/shots_max - 0.5),src,src::do_special_minigun_sweep(),target,shots_current,shots_max)
+	minigun_sweep_timer = addtimer(CALLBACK(src, PROC_REF(do_special_minigun_sweep), target, shots_current, shots_max), 0.25 + max(0,shots_current/shots_max - 0.5))
 
 /mob/living/simple/can_man/proc/shoot_minigun(atom/target,use_spread=FALSE)
 

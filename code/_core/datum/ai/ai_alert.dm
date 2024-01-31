@@ -50,7 +50,7 @@
 		try_investigate(alert_epicenter,force_if_on_cooldown=TRUE)
 
 	if(alert_level <= ALERT_LEVEL_NONE)
-		CALLBACK_REMOVE("investigate_\ref[src]")
+		deltimer(investigate_timer)
 
 	if(old_alert_level != alert_level)
 		on_alert_level_changed(old_alert_level,alert_level,alert_source)

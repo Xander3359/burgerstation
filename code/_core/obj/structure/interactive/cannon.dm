@@ -41,6 +41,9 @@
 
 	var/total_size = 0
 
+	///Fire cannon timer
+	var/fire_cannon_timer
+
 /obj/structure/interactive/cannon/New(desired_loc)
 	. = ..()
 	icon_state = "idle"
@@ -183,13 +186,13 @@
 
 /obj/structure/interactive/cannon/update_overlays()
 	. = ..()
-	if(has_fuse && !CALLBACK_EXISTS("\ref[src]_fire_cannon"))
+	if(has_fuse && !timeleft(fire_cannon_timer))
 		var/image/I = new/image(icon,"fuse")
 		add_overlay(I)
 
 /obj/structure/interactive/cannon/proc/light_fuse(mob/living/caller)
 	caller.visible_message(span("danger","\The [caller.name] lights the fuse of \the [src.name]!"),span("danger","You light the fuse of \the [src.name]!"))
-	CALLBACK("\ref[src]_fire_cannon",3 SECONDS,src,src::fire(),caller)
+	fire_cannon_timer = addtimer(CALLBACK(src, PROC_REF(fire), caller), 3 SECONDS)
 	update_sprite()
 	particles.spawning = 10
 	play_sound('sound/effects/fuse.ogg',get_turf(src))
@@ -199,7 +202,7 @@
 
 	INTERACT_CHECK_NO_DELAY(src)
 
-	if(CALLBACK_EXISTS("\ref[src]_fire_cannon"))
+	if(timeleft(fire_cannon_timer))
 		caller?.to_chat(span("warning","\The [src.name] is already lit!"))
 		return FALSE
 

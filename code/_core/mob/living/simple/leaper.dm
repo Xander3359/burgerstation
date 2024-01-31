@@ -71,6 +71,9 @@
 
 	var/list/tracked_frogs = list()
 
+	var/leaper_teleport_timer
+	var/leaper_shoot_bubble_timer
+
 /mob/living/simple/leaper/Destroy()
 	. = ..()
 	tracked_frogs.Cut()
@@ -84,7 +87,7 @@
 
 /mob/living/simple/leaper/proc/try_teleport()
 
-	if(CALLBACK_EXISTS("\ref[src]_leaper_teleport"))
+	if(timeleft(leaper_teleport_timer))
 		return FALSE
 
 	var/list/valid_turfs = list()
@@ -107,7 +110,7 @@
 
 	animate(src,alpha=0,color="#000000",time=10)
 	set_density(FALSE)
-	CALLBACK("\ref[src]_leaper_teleport",10,src,src::teleport(),desired_turf)
+	leaper_teleport_timer = addtimer(CALLBACK(src, PROC_REF(teleport), desired_turf), 10)
 
 	return TRUE
 
@@ -127,11 +130,11 @@
 	if(!ai || !ai.objective_attack)
 		return FALSE
 
-	if(CALLBACK_EXISTS("\ref[src]_shoot_bubble_[bubble_count]"))
+	if(timeleft(leaper_shoot_bubble_timer))
 		return FALSE
 
 	for(var/i=1,i<=bubble_count,i++)
-		CALLBACK("\ref[src]_shoot_bubble_[i]",5+i*6,src,src::shoot_bubble(),ai.objective_attack)
+		leaper_shoot_bubble_timer = addtimer(CALLBACK(src, PROC_REF(shoot_bubble), ai.objective_attack), 5+i*6)
 
 	return TRUE
 
@@ -220,7 +223,7 @@
 		E.alpha = 0
 		flick("leaper_bubble_form",E)
 		animate(E,pixel_z = 0,alpha=255,time=3 SECONDS)
-		CALLBACK("\ref[E]_telegraph_explode",6 SECONDS,src,src::blood_attack_do_explode(),E)
+		addtimer(CALLBACK(src, PROC_REF(blood_attack_do_explode), E), 6 SECONDS)
 		for(var/k in DIRECTIONS_ALL_CENTER)
 			var/turf/T2 = get_step(T,k)
 			for(var/obj/effect/cleanable/blood/B in T2.contents)

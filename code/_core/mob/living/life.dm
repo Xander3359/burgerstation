@@ -116,7 +116,7 @@
 /mob/living/proc/revive()
 	if(!dead)
 		return FALSE
-	CALLBACK_REMOVE("\ref[src]_make_unrevivable")
+	deltimer(unrevivable_timer)
 	hit_logs = list() //Clear logs.
 	movement_flags = 0x0
 	attack_flags = 0x0
@@ -246,7 +246,7 @@
 	if(expiration_time == -1)
 		make_unrevivable()
 	else if(expiration_time > 0)
-		CALLBACK("\ref[src]_make_unrevivable",expiration_time,src,src::make_unrevivable())
+		unrevivable_timer = addtimer(CALLBACK(src, PROC_REF(make_unrevivable)), expiration_time, TIMER_STOPPABLE)
 
 	if(delete_on_death)
 		qdel(src)
@@ -634,6 +634,6 @@ mob/living/proc/on_life_slow()
 	else
 		src.ckey_last = null
 
-	CALLBACK_REMOVE("\ref[src]_make_unrevivable")
+	deltimer(unrevivable_timer)
 
 	return TRUE

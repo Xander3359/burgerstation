@@ -354,7 +354,7 @@
 		if(linked_ai.dead)
 			linked_ai = null
 		if(linked_ai)
-			CALLBACK("\ref[src]_try_revival",30 SECONDS,src,src::try_revival())
+			addtimer(CALLBACK(src, PROC_REF(try_revival)), 30 SECONDS)
 
 
 /mob/living/simple/turret/ai_core/immortalish/proc/try_revival()

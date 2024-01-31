@@ -29,8 +29,12 @@
 
 	rarity = RARITY_MYTHICAL
 
+	var/shield_disable_timer
+	var/shield_cooldown_timer
+	var/shield_beep_timer
+
 /obj/item/clothing/belt/damage_deferal_shield/use_condition(amount_to_use=1)
-	if(!CALLBACK_EXISTS("\ref[src]_disable_shield"))
+	if(!(timeleft(shield_disable_timer)))
 		return FALSE
 	. = ..()
 
@@ -60,23 +64,23 @@
 	shield_overlay.alpha = 0
 
 /obj/item/clothing/belt/damage_deferal_shield/PreDestroy()
-	CALLBACK_REMOVE("\ref[src]_disable_shield")
-	CALLBACK_REMOVE("\ref[src]_cooldown_end")
-	CALLBACK_REMOVE("\ref[src]_shield_beep")
+	deltimer(shield_disable_timer)
+	deltimer(shield_cooldown_timer)
+	deltimer(shield_beep_timer)
 	QDEL_NULL(shield_overlay)
 	. = ..()
 
 /obj/item/clothing/belt/damage_deferal_shield/click_self(mob/caller,location,control,params)
 
-	if(CALLBACK_EXISTS("\ref[src]_disable_shield"))
+	if(timeleft(shield_disable_timer))
 		caller.to_chat(span("notice","You toggle \the [src.name] off and manually cycle the shield."))
-		CALLBACK_REMOVE("\ref[src]_disable_shield")
+		deltimer(shield_disable_timer)
 		disable_shield()
-	else if(CALLBACK_EXISTS("\ref[src]_cooldown_end"))
+	else if(timeleft(shield_cooldown_timer))
 		caller.to_chat(span("warning","The interface flickers an error as it is still cooling down!"))
 	else
 		caller.to_chat(span("notice","You toggle \the [src.name] on and activate the shield."))
-		CALLBACK("\ref[src]_disable_shield",active_time,src,src::disable_shield()) //Activate the shield!
+		shield_disable_timer = addtimer(CALLBACK(src, PROC_REF(disable_shield)), active_time, TIMER_STOPPABLE) //Activate the shield!
 
 	update_sprite()
 
@@ -89,23 +93,23 @@
 	icon = initial(icon)
 	icon_state = initial(icon_state)
 
-	if(CALLBACK_EXISTS("\ref[src]_cooldown_end")) //Shield that is cooling down.
+	if(timeleft(shield_cooldown_timer)) //Shield that is cooling down.
 		icon_state = "[icon_state]_cooling"
-	else if(CALLBACK_EXISTS("\ref[src]_disable_shield")) //Active shield.
+	else if(timeleft(shield_disable_timer)) //Active shield.
 		icon_state = "[icon_state]_active"
 
 /obj/item/clothing/belt/damage_deferal_shield/proc/disable_shield()
 	damage_limit = initial(damage_limit)
-	CALLBACK("\ref[src]_cooldown_end",cooldown_time,src,src::cooldown_end())
+	shield_cooldown_timer = addtimer(CALLBACK(src, PROC_REF(cooldown_end)), cooldown_time, TIMER_STOPPABLE)
 	shield_beep()
 	update_sprite()
 	return TRUE
 
 /obj/item/clothing/belt/damage_deferal_shield/proc/shield_beep()
-	if(!CALLBACK_EXISTS("\ref[src]_cooldown_end")) //Only beep if there is a cooldown.
+	if(!timeleft(shield_beep_timer)) //Only beep if there is a cooldown.
 		return FALSE
 	play_sound('sound/effects/shield_beep.ogg',get_turf(src))
-	CALLBACK("\ref[src]_shield_beep",1 SECONDS,src,src::shield_beep())
+	shield_beep_timer = addtimer(CALLBACK(src, PROC_REF(shield_beep)), 1 SECONDS, TIMER_STOPPABLE)
 	return TRUE
 
 
@@ -122,11 +126,11 @@
 	if(damage_limit <= 0) //No damage can be protected!
 		return FALSE
 
-	if(CALLBACK_EXISTS("\ref[src]_cooldown_end")) //Cooling down, can't do anything right now.
+	if(timeleft(shield_cooldown_timer)) //Cooling down, can't do anything right now.
 		return FALSE
 
-	if(!CALLBACK_EXISTS("\ref[src]_disable_shield")) //The shield is not active.
-		CALLBACK("\ref[src]_disable_shield",active_time,src,src::disable_shield()) //Activate the shield!
+	if(!timeleft(shield_disable_timer)) //The shield is not active.
+		shield_disable_timer = addtimer(CALLBACK(src, PROC_REF(disable_shield)), active_time, TIMER_STOPPABLE) //Activate the shield!
 		return FALSE
 
 	animate(shield_overlay,alpha=clamp(damage_dealt+100,100,255),time=0,flags=ANIMATION_END_NOW )
@@ -135,7 +139,7 @@
 	damage_limit -= damage_dealt
 
 	if(damage_limit <= 0)
-		CALLBACK_REMOVE("\ref[src]_disable_shield")
+		deltimer(shield_disable_timer)
 		disable_shield()
 		return FALSE
 

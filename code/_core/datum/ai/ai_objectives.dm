@@ -275,14 +275,14 @@
 	if(!cooldown) //Do it instantly.
 		return investigate(desired_target)
 
-	if(CALLBACK_EXISTS("investigate_\ref[src]"))
+	if(timeleft(investigate_timer))
 		if(!force_if_on_cooldown)
 			return FALSE
-		CALLBACK_REMOVE("investigate_\ref[src]")
+		deltimer(investigate_timer)
 		return investigate(desired_target)
 
 	owner.set_dir(get_dir(owner,desired_target)) //Look at the source of noise.
-	CALLBACK("investigate_\ref[src]",reaction_time,src,src::investigate(),desired_target)
+	investigate_timer = addtimer(CALLBACK(src, PROC_REF(investigate), desired_target), reaction_time, TIMER_STOPPABLE)
 
 	return TRUE
 

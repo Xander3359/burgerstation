@@ -23,6 +23,9 @@
 	plane = PLANE_HUD
 	layer = LAYER_HUD
 
+	///Timer for tooltips
+	var/tooltip_timer
+
 /obj/hud/New(desired_loc)
 	. = ..()
 	if(!tooltip_text)
@@ -152,9 +155,9 @@ var/regex/valid_punct = regex(@"[.?!]($|\s)")
 /obj/hud/MouseEntered(location,control,params)
 	. = ..()
 	if(tooltip_text && mouse_opacity > 0)
-		CALLBACK("tooltip_\ref[src]",1 SECONDS,src,src::set_tooltip(),usr)
+		tooltip_timer = addtimer(CALLBACK(src, PROC_REF(set_tooltip), usr), 1 SECONDS, TIMER_STOPPABLE)
 
 /obj/hud/MouseExited(location,control,params)
 	. = ..()
-	CALLBACK_REMOVE("tooltip_\ref[src]")
+	deltimer(tooltip_timer)
 	usr.tooltip?.set_text(null)

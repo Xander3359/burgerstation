@@ -46,7 +46,7 @@
 	var/tmp/facing_opaque = FALSE
 
 	/// List used to store how much we're affecting corners.
-	var/list/datum/lighting_corner/effect_str
+	var/list/lighting_corner/effect_str
 
 	var/list/turf/affecting_turfs
 
@@ -55,7 +55,7 @@
 	/// whether we are to be added to SSlighting's sources_queue list for an update
 	var/needs_update = LIGHTING_NO_UPDATE
 
-/light_source/PreDestroy()
+/datum/light_source/PreDestroy()
 	remove_lum()
 	SSlighting.light_queue -= src
 	SSlighting.total_lighting_sources--
@@ -67,7 +67,7 @@
 		LAZYREMOVE(top_atom.light_sources, src)
 	. = ..()
 
-/light_source/Destroy()
+/datum/light_source/Destroy()
 
 	top_atom = null
 	source_atom = null
@@ -86,7 +86,7 @@
 #define GET_APPROXIMATE_PIXEL_DIR(PX, PY) ((!(PX) ? 0 : ((PX >= 16 ? EAST : (PX <= -16 ? WEST : 0)))) | (!PY ? 0 : (PY >= 16 ? NORTH : (PY <= -16 ? SOUTH : 0))))
 #define UPDATE_APPROXIMATE_PIXEL_TURF var/px = top_atom.light_offset_x; var/py = top_atom.light_offset_y; var/_mask = GET_APPROXIMATE_PIXEL_DIR(px, py); pixel_turf = _mask ? (get_step(source_turf, _mask) || source_turf) : source_turf
 
-/light_source/New(atom/owner, atom/top)
+/datum/light_source/New(atom/owner, atom/top)
 	SSlighting.total_lighting_sources++
 	source_atom = owner // Set our new owner.
 
@@ -118,7 +118,7 @@
 		needs_update = level;
 
 // This proc will cause the light source to update the top atom, and add itself to the update queue.
-/light_source/proc/set_top_atom(atom/new_top_atom)
+/datum/light_source/proc/set_top_atom(atom/new_top_atom)
 	// This top atom is different.
 	if (new_top_atom && new_top_atom != top_atom)
 		if(top_atom != source_atom) // Remove ourselves from the light sources of that top atom.
@@ -132,11 +132,11 @@
 	INTELLIGENT_UPDATE(LIGHTING_CHECK_UPDATE)
 
 // Will force an update without checking if it's actually needed.
-/light_source/proc/force_update()
+/datum/light_source/proc/force_update()
 	INTELLIGENT_UPDATE(LIGHTING_FORCE_UPDATE)
 
 // Will cause the light source to recalculate turfs that were removed or added to visibility only.
-/light_source/proc/vis_update()
+/datum/light_source/proc/vis_update()
 	INTELLIGENT_UPDATE(LIGHTING_VIS_UPDATE)
 
 #define POLAR_TO_CART_X(R,T) ((R) * cos(T))
@@ -145,7 +145,7 @@
 #define MINMAX(NUM) ((NUM) < 0 ? -round(-(NUM)) : round(NUM))
 #define ARBITRARY_NUMBER 10
 
-/light_source/proc/regenerate_angle(ndir)
+/datum/light_source/proc/regenerate_angle(ndir)
 	old_direction = ndir
 
 	var/turf/front = get_step(source_turf, old_direction)
@@ -240,7 +240,7 @@
 #undef POLAR_TO_CART_Y
 #undef MINMAX
 
-/light_source/proc/remove_lum(now = FALSE)
+/datum/light_source/proc/remove_lum(now = FALSE)
 	applied = FALSE
 
 	var/thing
@@ -258,7 +258,7 @@
 
 	effect_str = null
 
-/light_source/proc/recalc_corner(lighting_corner/C, now = FALSE)
+/datum/light_source/proc/recalc_corner(var/lighting_corner/C, now = FALSE)
 	LAZYINITLIST(effect_str)
 	if (effect_str[C]) // Already have one.
 		REMOVE_CORNER(C,now)
@@ -275,7 +275,7 @@
 
 	UNSETEMPTY(effect_str)
 
-/light_source/proc/update_corners(now = FALSE)
+/datum/light_source/proc/update_corners(var/now = FALSE)
 
 	var/update = FALSE
 	var/atom/source_atom = src.source_atom //From /tg/. Prevents it from being cleared mid update.

@@ -5,11 +5,14 @@
 	alpha = 255
 	plane = PLANE_EFFECT
 
+	///Timer to make an item fade
+	var/item_fade_timer
+
 /obj/effect/temp/item_pickup/PreDestroy()
 	. = ..()
-	CALLBACK_REMOVE("fade_\ref[src]")
+	deltimer(item_fade_timer)
 
-obj/effect/temp/item_pickup/New(var/atom/desired_location,var/desired_time,var/atom/old_location,var/obj/item/desired_object,var/desired_animation_type = "pickup")
+/obj/effect/temp/item_pickup/New(atom/desired_location, desired_time, atom/old_location, obj/item/desired_object, desired_animation_type = "pickup")
 
 	appearance = desired_object.appearance
 	plane = initial(plane)
@@ -36,11 +39,11 @@ obj/effect/temp/item_pickup/New(var/atom/desired_location,var/desired_time,var/a
 		if("transfer")
 			animate(src,pixel_x = 0,pixel_y = 0,time = duration,easing=SINE_EASING)
 
-	CALLBACK("fade_\ref[src]",duration,src,src::fade(),desired_object)
+	item_fade_timer = addtimer(CALLBACK(src, PROC_REF(fade), desired_object), duration, TIMER_STOPPABLE)
 
 	return TRUE
 
-obj/effect/temp/item_pickup/proc/fade(var/atom/object)
+/obj/effect/temp/item_pickup/proc/fade(atom/object)
 	object.alpha = initial(object.alpha)
 	qdel(src)
 	return TRUE

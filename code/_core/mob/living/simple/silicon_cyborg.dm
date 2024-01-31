@@ -71,7 +71,7 @@
 	module = pick("sec","medical","engineer")
 	icon_state = "[module]_transform"
 	add_status_effect(PARALYZE,duration=50,magnitude=-1,stealthy=TRUE,bypass_limits=TRUE)
-	CALLBACK("\ref[src]_finish_transform",50,src,src::finish_transform())
+	addtimer(CALLBACK(src, PROC_REF(finish_transform)), 50)
 
 /mob/living/simple/silicon/cyborg/proc/finish_transform()
 

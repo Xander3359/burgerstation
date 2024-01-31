@@ -23,7 +23,7 @@
 
 /atom/movable/proc/handle_movement(adjust_delay = 1) //Measured in ticks
 
-	if(anchored || CALLBACK_EXISTS("momentum_\ref[src]"))
+	if(anchored) //CALLBACK_EXISTS("momentum_\ref[src]"))
 		is_moving = FALSE
 		return FALSE
 

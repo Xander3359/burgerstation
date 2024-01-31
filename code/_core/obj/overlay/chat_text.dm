@@ -42,9 +42,9 @@
 
 	maptext = "<center><font color='white' style='-dm-text-outline: 1 black'>[html_decode(desired_text)]</font></center>"
 
-	CALLBACK("fade_out_\ref[src]",50,src,src::fade_out())
+	addtimer(CALLBACK(src, PROC_REF(fade_out)), 50)
 
 /obj/effect/chat_text/proc/fade_out()
 	animate(src,alpha=0,time=10)
-	CALLBACK("delete_\ref[src]",10,src,.datum/proc/delete)
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/datum, delete)), 10)
 	return TRUE

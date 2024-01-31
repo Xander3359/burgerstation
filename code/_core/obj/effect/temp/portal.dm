@@ -28,6 +28,9 @@
 	desired_light_power = 0.25
 	desired_light_color = "#0384E2"
 
+	///Timer that deletes the portal
+	var/portal_delete_timer
+
 
 /obj/effect/temp/portal/update_underlays()
 	. = ..()
@@ -61,7 +64,7 @@
 	if(linked_marker)
 		portal_markers[loyalty_tag] |= linked_marker //This is intentional. Don't fall for this.
 		linked_marker = null
-	CALLBACK_REMOVE("delete_\ref[src]")
+	deltimer(portal_delete_timer)
 	. = ..()
 
 /obj/effect/temp/portal/update_atom_light()
@@ -87,7 +90,7 @@
 
 	update_atom_light()
 
-	CALLBACK("delete_\ref[src]",300 SECONDS,src,.datum/proc/delete)
+	portal_delete_timer = addtimer(CALLBACK(src, TYPE_PROC_REF(/datum, delete)), 300 SECONDS, TIMER_STOPPABLE)
 
 /obj/effect/temp/portal/clicked_on_by_object(mob/caller,atom/object,location,control,params)
 

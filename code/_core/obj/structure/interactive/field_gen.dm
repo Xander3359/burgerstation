@@ -22,6 +22,9 @@
 	var/list/linked_field_gens = list()
 	var/list/linked_field_gen_walls = list() //dimensional list
 
+	///Field gen process timer
+	var/process_field_gen_timer
+
 /obj/structure/interactive/field_generator/PreDestroy()
 	set_active(FALSE,force=TRUE)
 	. = ..()
@@ -212,7 +215,7 @@
 		update_sprite()
 
 	if(stored_emitter_energy > 0 || stored_field_energy > 0)
-		CALLBACK("\ref[src]_process_field_gen",8 SECONDS,src,src::process_field_gen())
+		process_field_gen_timer = addtimer(CALLBACK(src, PROC_REF(process_field_gen)), 8 SECONDS)
 
 	if( (old_field_state > 0 && stored_field_energy <= 0) || (old_field_state <= 0 && stored_field_energy > 0) ) //Stable field made unstable field, or vice vesa.
 		update_barrier_chains()
@@ -231,7 +234,7 @@
 
 	var/old_emitter_state = clamp(stored_emitter_energy,0,6)
 	stored_emitter_energy = min(stored_emitter_energy + 1,7) //Add 1, as it was hit.
-	if(!old_emitter_state && stored_emitter_energy > 0 && !CALLBACK_EXISTS("\ref[src]_process_field_gen"))
+	if(!old_emitter_state && stored_emitter_energy > 0 && !timeleft(process_field_gen))
 		process_field_gen()
 	else if(old_emitter_state != stored_emitter_energy)
 		update_sprite()

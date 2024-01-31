@@ -17,12 +17,11 @@
 	can_attack = FALSE
 
 /ai/silicon_spawner/set_objective(atom/A)
-
 	. = ..()
 
 	if(. && objective_attack)
 		var/mob/living/simple/silicon/spawner/SP = owner
 		if(SP.has_stored_cyborg)
 			SP.create_silicon()
-		else if(!CALLBACK_EXISTS("\ref[SP]_create_silicon") && !CALLBACK_EXISTS("\ref[SP]_start_creating"))
+		else if(!SP.timeleft(start_creating_timer) && !SP.timeleft(create_silicon_timer))
 			SP.start_creating()

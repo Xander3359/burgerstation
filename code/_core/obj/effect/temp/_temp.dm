@@ -1,21 +1,23 @@
-obj/effect/temp
+/obj/effect/temp
 	name = "temp effect"
 	desc = "Effect that gets deleted after a while."
 	var/duration = 10 //Deciseconds
+	///Timer for temporary effects
+	var/temp_effect_timer
 
-obj/effect/temp/PreDestroy()
-	CALLBACK_REMOVE("remove_effect_\ref[src]")
+/obj/effect/temp/PreDestroy()
+	deltimer(temp_effect_timer)
 	. = ..()
 
-obj/effect/temp/New(var/desired_location,var/desired_time)
+/obj/effect/temp/New(desired_location, desired_time)
 
 	. = ..()
 
 	if(desired_time)
 		duration = desired_time
 
-	CALLBACK("remove_effect_\ref[src]",duration,src,src::remove_effect())
+	temp_effect_timer = addtimer(CALLBACK(src, PROC_REF(remove_effect)), duration, TIMER_STOPPABLE)
 
-obj/effect/temp/proc/remove_effect()
+/obj/effect/temp/proc/remove_effect()
 	qdel(src)
 	return TRUE

@@ -1,4 +1,4 @@
-obj/effect/temp/hazard
+/obj/effect/temp/hazard
 	name = "hazard"
 	desc = "Avoid this."
 	duration = 3 SECONDS
@@ -16,11 +16,13 @@ obj/effect/temp/hazard
 
 	hazardous = TRUE
 
-obj/effect/temp/hazard/Destroy()
+	var/cross_damage_timer
+
+/obj/effect/temp/hazard/Destroy()
 	owner = null
 	return ..()
 
-obj/effect/temp/hazard/proc/activate_hazard()
+/obj/effect/temp/hazard/proc/activate_hazard()
 	enabled = TRUE
 	do_hazard()
 	return TRUE
@@ -28,7 +30,7 @@ obj/effect/temp/hazard/proc/activate_hazard()
 /obj/effect/temp/hazard/proc/deactivate_hazard()
 	return TRUE
 
-obj/effect/temp/hazard/New(var/desired_location,var/desired_time,var/desired_owner)
+/obj/effect/temp/hazard/New(desired_location, desired_time, desired_owner)
 
 	if(desired_owner)
 		owner = desired_owner
@@ -36,7 +38,7 @@ obj/effect/temp/hazard/New(var/desired_location,var/desired_time,var/desired_own
 	if(hazard_delay <= 0)
 		activate_hazard()
 	else
-		CALLBACK("activate_hazard_\ref[src]",hazard_delay,src,src::activate_hazard())
+		addtimer(CALLBACK(src, PROC_REF(activate_hazard)), hazard_delay)
 
 	return ..()
 
@@ -48,8 +50,8 @@ obj/effect/temp/hazard/New(var/desired_location,var/desired_time,var/desired_own
 
 	do_damage(L)
 
-	if(!CALLBACK_EXISTS("\ref[src]_cross_\ref[L]"))
-		CALLBACK("\ref[src]_cross_\ref[L]",1 SECONDS,src,src::do_cross_damage(),L)
+	if(!timeleft(cross_damage_timer))
+		cross_damage_timer = addtimer(CALLBACK(src, PROC_REF(do_cross_damage), L), 1 SECONDS)
 
 /obj/effect/temp/hazard/Crossed(atom/movable/O,atom/OldLoc)
 	if(enabled && cross_hazard && is_living(O))
@@ -89,7 +91,7 @@ obj/effect/temp/hazard/New(var/desired_location,var/desired_time,var/desired_own
 				do_damage(L)
 
 
-obj/effect/temp/hazard/falling_fireball
+/obj/effect/temp/hazard/falling_fireball
 	name = "falling fireball"
 	icon = 'icons/obj/projectiles/magic.dmi'
 	icon_state = "firebolt"
@@ -98,7 +100,7 @@ obj/effect/temp/hazard/falling_fireball
 	hazard_delay = 2 SECONDS
 	damage_type = /damagetype/ranged/magic/fireball
 
-obj/effect/temp/hazard/falling_fireball/New(var/desired_location,var/desired_time,var/desired_owner)
+/obj/effect/temp/hazard/falling_fireball/New(desired_location,desired_time,desired_owner)
 
 	alpha = 50
 	pixel_z = TILE_SIZE*VIEW_RANGE
@@ -110,7 +112,7 @@ obj/effect/temp/hazard/falling_fireball/New(var/desired_location,var/desired_tim
 
 	return ..()
 
-obj/effect/temp/hazard/tentacle/
+/obj/effect/temp/hazard/tentacle/
 	name = "goliath tentacle"
 	icon = 'icons/mob/living/simple/lavaland/goliath.dmi'
 	icon_state = "tentacle"
@@ -123,16 +125,16 @@ obj/effect/temp/hazard/tentacle/
 
 	layer = LAYER_FLOOR_EFFECTS
 
-obj/effect/temp/hazard/tentacle/New(var/desired_location,var/desired_time,var/desired_owner)
+/obj/effect/temp/hazard/tentacle/New(desired_location,desired_time,desired_owner)
 	. = ..()
-	CALLBACK("deactivate_hazard_\ref[src]",9,src,src::deactivate_hazard())
+	addtimer(CALLBACK(src, PROC_REF(deactivate_hazard)), 9)
 
-obj/effect/temp/hazard/tentacle/attack(var/atom/attacker,var/atom/victim,var/list/params=list(),var/atom/blamed,var/ignore_distance = FALSE, var/precise = FALSE,var/damage_multiplier=1,var/damagetype/damage_type_override)
+/obj/effect/temp/hazard/tentacle/attack(atom/attacker,atom/victim,list/params=list(),atom/blamed,ignore_distance = FALSE, precise = FALSE,damage_multiplier=1,damagetype/damage_type_override)
 	if(istype(victim,/mob/living/simple/goliath/)) //This bug is hilarious but we don't want to have it.
 		return FALSE
 	return ..()
 
-obj/effect/temp/hazard/bubblefist/
+/obj/effect/temp/hazard/bubblefist/
 	name = "bubblegum grab"
 	icon = 'icons/mob/living/simple/lavaland/bubblegum_hands.dmi'
 	icon_state = "rightpawgrab"
@@ -148,22 +150,22 @@ obj/effect/temp/hazard/bubblefist/
 
 	plane = PLANE_MOVABLE - 1
 
-obj/effect/temp/hazard/bubblefist/update_overlays()
+/obj/effect/temp/hazard/bubblefist/update_overlays()
 	. = ..()
 	var/image/I = new/image(icon,overlay_state)
 	I.appearance_flags = src.appearance_flags
 	I.plane = PLANE_EFFECT
 	add_overlay(I)
 
-obj/effect/temp/hazard/bubblefist/New(var/desired_location,var/desired_time,var/desired_owner)
+/obj/effect/temp/hazard/bubblefist/New(desired_location,desired_time,desired_owner)
 	if(prob(50))
 		icon_state = "leftpawgrab"
 		overlay_state = "leftthumbgrab"
 	. = ..()
-	CALLBACK("deactivate_hazard_\ref[src]",7,src,src::deactivate_hazard())
+	addtimer(CALLBACK(src, PROC_REF(deactivate_hazard)), 7)
 	update_sprite()
 
-obj/effect/temp/hazard/bubblefist/attack(var/atom/attacker,var/atom/victim,var/list/params=list(),var/atom/blamed,var/ignore_distance = FALSE, var/precise = FALSE,var/damage_multiplier=1,var/damagetype/damage_type_override)
+/obj/effect/temp/hazard/bubblefist/attack(atom/attacker,atom/victim,list/params=list(),atom/blamed,ignore_distance = FALSE, precise = FALSE,damage_multiplier=1,damagetype/damage_type_override)
 	if(istype(victim,/mob/living/simple/bubblegum)) //This bug is hilarious but we don't want to have it.
 		return FALSE
 	return ..()
